@@ -4,9 +4,8 @@ MVP de un juego 2D de exploración y plataformas, inspirado en la exploración y
 
 Esta primera entrega cubre aproximadamente el **30% del mundo** planeado: movimiento, salto, doble salto, dash, un NPC con diálogo y zonas del mapa pensadas para habilidades futuras.
 
----
 
-## 🎮 Controles
+## Controles
 
 | Acción | Tecla |
 |---|---|
@@ -16,7 +15,7 @@ Esta primera entrega cubre aproximadamente el **30% del mundo** planeado: movimi
 | Dash | `Shift` |
 | Interactuar / hablar | `E` |
 
-## 🧪 Shortcuts de testing
+## Shortcuts de testing
 
 Para poder probar rápido las habilidades sin tener que jugar desde cero:
 
@@ -27,15 +26,8 @@ Para poder probar rápido las habilidades sin tener que jugar desde cero:
 
 Cada vez que se presionan, el estado queda impreso en la consola de salida de Godot (`Doble salto activado/desactivado`, `Dash activado/desactivado`), para verificar en el momento qué habilidad está prendida.
 
----
 
-## ▶️ Cómo correr el proyecto
-
-1. Abrir **Godot 4.6** (no usar versiones posteriores).
-2. `Importar` → seleccionar la carpeta del proyecto (donde está `project.godot`).
-3. Correr la escena principal `Scenes/Main.tscn` (F5 o el botón ▶ de play).
-
-## 🗺️ Qué hay en esta entrega
+## Qué hay en esta entrega
 
 - Exploración de un mapa con distintas alturas, plataformas y huecos.
 - Movimiento, salto, doble salto y dash completamente jugables.
@@ -43,7 +35,7 @@ Cada vez que se presionan, el estado queda impreso en la consola de salida de Go
 - Un NPC con diálogo simple (se abre y se cierra con `E`, bloquea el movimiento mientras está abierto).
 - Zonas del mapa intencionalmente inalcanzables con las habilidades actuales, pensadas para desbloquearse en futuras entregas.
 
-## 📁 Estructura
+## Estructura
 
 ```
 Assets/     sprites y tiles del pack usado para el escenario y el personaje
