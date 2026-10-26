@@ -1,0 +1,299 @@
+[gd_scene load_steps=19 format=3]
+
+[ext_resource type="Script" path="res://Scripts/level.gd" id="1"]
+[ext_resource type="TileSet" path="res://Scenes/ground_tileset.tres" id="2"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Background/Background.png" id="3"]
+[ext_resource type="PackedScene" path="res://Scenes/Player.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://Scenes/DialogueBox.tscn" id="6"]
+[ext_resource type="PackedScene" path="res://Scenes/TransitionArea.tscn" id="7"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Trees/Green-Tree.png" id="9"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Assets/Tiles.png" id="11"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Trees/Background.png" id="13"]
+[ext_resource type="Script" path="res://Scripts/arena.gd" id="15"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Combat/gate_v.png" id="16"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Combat/gate_h.png" id="17"]
+[ext_resource type="PackedScene" path="res://Scenes/Enemies/MossGuardian.tscn" id="21"]
+
+[sub_resource type="Gradient" id="Gradient_luz"]
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(1.8, 1.7, 0.8, 0, 1.8, 1.7, 0.8, 1, 1.8, 1.7, 0.8, 0)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_trigger"]
+size = Vector2(800, 320)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gate1"]
+size = Vector2(16, 320)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gate2"]
+size = Vector2(16, 64)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gate3"]
+size = Vector2(48, 16)
+
+[node name="Bosque" type="Node2D"]
+script = ExtResource("1")
+map = Array[String](["######################################################################", "######################################################################", "##..................................................................##", "##..................................................................##", "##..................................................................##", "##..................................................................##", "##..................................................................##", "##..................................................................##", "##..................................................................##", "##..................................................................##", "##..................................................................##", "##..................................................................##", "#############.......................................................##", "##.............#####................................................##", "##..................................................................##", "##..................................................................##", "##.....................#####........................................##", "##..................................................................##", "##..................................................................##", "##............................#####...................##............##", "##....................................................##............##", "##....................................................##............##", "############################################...#######################", "############################################...#######################"])
+camera_margin_top = 0
+camera_margin_bottom = 0
+terrain = "grass"
+platform_style = "grass"
+back_wall = "none"
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+color = Color(0.8, 0.95, 0.8, 1)
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="Sky" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.05, 0)
+motion_mirroring = Vector2(648, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/Sky"]
+modulate = Color(0.8, 0.95, 0.8, 1)
+position = Vector2(324, 180)
+scale = Vector2(1.35, 1.35)
+texture = ExtResource("3")
+
+[node name="Capa1" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.15, 0)
+motion_mirroring = Vector2(352, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/Capa1"]
+modulate = Color(0.56, 0.76, 0.64, 1)
+position = Vector2(176, 210)
+texture = ExtResource("13")
+region_enabled = true
+region_rect = Rect2(352, 0, 352, 256)
+
+[node name="Capa2" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.3, 0)
+motion_mirroring = Vector2(352, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/Capa2"]
+modulate = Color(0.48, 0.665, 0.52, 1)
+position = Vector2(176, 240)
+texture = ExtResource("13")
+region_enabled = true
+region_rect = Rect2(0, 0, 352, 256)
+
+[node name="Capa3" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.5, 0)
+motion_mirroring = Vector2(352, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/Capa3"]
+modulate = Color(0.28, 0.4275, 0.32, 1)
+position = Vector2(176, 290)
+texture = ExtResource("13")
+region_enabled = true
+region_rect = Rect2(0, 0, 352, 256)
+
+[node name="Ground" type="TileMapLayer" parent="."]
+tile_set = ExtResource("2")
+
+[node name="Decor" type="Node2D" parent="."]
+
+[node name="Arbol1" type="Sprite2D" parent="Decor"]
+position = Vector2(136, 261)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("9")
+region_enabled = true
+region_rect = Rect2(0, 0, 112, 372)
+
+[node name="Arbol2" type="Sprite2D" parent="Decor"]
+position = Vector2(616, 261)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("9")
+region_enabled = true
+region_rect = Rect2(0, 0, 112, 372)
+
+[node name="Arbol3" type="Sprite2D" parent="Decor"]
+position = Vector2(968, 261)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("9")
+region_enabled = true
+region_rect = Rect2(0, 0, 112, 372)
+
+[node name="Juncos1" type="Sprite2D" parent="Decor"]
+position = Vector2(936, 341)
+texture = ExtResource("11")
+region_enabled = true
+region_rect = Rect2(257, 326, 15, 26)
+
+[node name="Planta_azul1" type="Sprite2D" parent="Decor"]
+position = Vector2(112, 335.5)
+texture = ExtResource("11")
+region_enabled = true
+region_rect = Rect2(274, 315, 28, 37)
+
+[node name="Hongo1" type="Sprite2D" parent="Decor"]
+position = Vector2(336, 338)
+texture = ExtResource("11")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(290, 240, 28, 32)
+
+[node name="Juncos2" type="Sprite2D" parent="Decor"]
+position = Vector2(392, 245)
+texture = ExtResource("11")
+region_enabled = true
+region_rect = Rect2(257, 326, 15, 26)
+
+[node name="Hongo2" type="Sprite2D" parent="Decor"]
+position = Vector2(832, 338)
+texture = ExtResource("11")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(290, 240, 28, 32)
+
+[node name="Flor_azul1" type="Sprite2D" parent="Decor"]
+position = Vector2(312, 194)
+texture = ExtResource("11")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(243, 272, 11, 32)
+
+[node name="Juncos3" type="Sprite2D" parent="Decor"]
+position = Vector2(376, 341)
+texture = ExtResource("11")
+region_enabled = true
+region_rect = Rect2(257, 326, 15, 26)
+
+[node name="Hojas1" type="Sprite2D" parent="Decor"]
+position = Vector2(144, 181.5)
+texture = ExtResource("11")
+region_enabled = true
+region_rect = Rect2(320, 359, 32, 25)
+
+[node name="Hongo_chico1" type="Sprite2D" parent="Decor"]
+position = Vector2(184, 343.5)
+texture = ExtResource("11")
+region_enabled = true
+region_rect = Rect2(321, 251, 14, 21)
+
+[node name="Flor_azul2" type="Sprite2D" parent="Decor"]
+position = Vector2(760, 338)
+texture = ExtResource("11")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(243, 272, 11, 32)
+
+[node name="Flor_azul3" type="Sprite2D" parent="Decor"]
+position = Vector2(200, 178)
+texture = ExtResource("11")
+region_enabled = true
+region_rect = Rect2(243, 272, 11, 32)
+
+[node name="Hongo_chico2" type="Sprite2D" parent="Decor"]
+position = Vector2(40, 343.5)
+texture = ExtResource("11")
+region_enabled = true
+region_rect = Rect2(321, 251, 14, 21)
+
+[node name="Hongo_ancho1" type="Sprite2D" parent="Decor"]
+position = Vector2(240, 341.5)
+texture = ExtResource("11")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(257, 247, 30, 25)
+
+[node name="Hongo3" type="Sprite2D" parent="Decor"]
+position = Vector2(432, 338)
+texture = ExtResource("11")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(290, 240, 28, 32)
+
+[node name="Luciernagas" type="CPUParticles2D" parent="."]
+position = Vector2(560, 192)
+amount = 47
+lifetime = 6.0
+preprocess = 6.0
+emission_shape = 3
+emission_rect_extents = Vector2(560, 192)
+direction = Vector2(1, -0.3)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 3.0
+initial_velocity_max = 10.0
+scale_amount_min = 1.0
+scale_amount_max = 2.0
+color_ramp = SubResource("Gradient_luz")
+
+[node name="Arena" type="Node2D" parent="."]
+script = ExtResource("15")
+arena_id = "bosque_jefe"
+heal_on_clear = true
+
+[node name="Trigger" type="Area2D" parent="Arena"]
+collision_layer = 0
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Arena/Trigger"]
+position = Vector2(640, 192)
+shape = SubResource("RectangleShape2D_trigger")
+
+[node name="Gates" type="Node2D" parent="Arena"]
+
+[node name="Gate1" type="StaticBody2D" parent="Arena/Gates"]
+position = Vector2(216, 192)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Arena/Gates/Gate1"]
+shape = SubResource("RectangleShape2D_gate1")
+disabled = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Arena/Gates/Gate1"]
+visible = false
+texture_repeat = 2
+texture = ExtResource("16")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 320)
+
+[node name="Gate2" type="StaticBody2D" parent="Arena/Gates"]
+position = Vector2(1096, 320)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Arena/Gates/Gate2"]
+shape = SubResource("RectangleShape2D_gate2")
+disabled = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Arena/Gates/Gate2"]
+visible = false
+texture_repeat = 2
+texture = ExtResource("16")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 64)
+
+[node name="Gate3" type="StaticBody2D" parent="Arena/Gates"]
+position = Vector2(728, 360)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Arena/Gates/Gate3"]
+shape = SubResource("RectangleShape2D_gate3")
+disabled = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Arena/Gates/Gate3"]
+visible = false
+texture_repeat = 2
+texture = ExtResource("17")
+region_enabled = true
+region_rect = Rect2(0, 0, 48, 16)
+
+[node name="Wave1" type="Node2D" parent="Arena"]
+
+[node name="MossGuardian1" parent="Arena/Wave1" instance=ExtResource("21")]
+position = Vector2(936, 304)
+
+[node name="Doors" type="Node2D" parent="."]
+
+[node name="HaciaPradera" parent="Doors" instance=ExtResource("7")]
+position = Vector2(728, 424)
+door_id = "bosque_a"
+target_scene = "res://Scenes/Rooms/Pradera.tscn"
+target_door_id = "pradera_c"
+area_size = Vector2(48, 48)
+
+[node name="SpawnPoint" parent="Doors/HaciaPradera" index="1"]
+position = Vector2(-64, -92)
+
+[node name="Player" parent="." instance=ExtResource("4")]
+position = Vector2(664, 332)
+
+[node name="DialogueBox" parent="." instance=ExtResource("6")]

@@ -21,7 +21,9 @@ func _process(_delta: float) -> void:
 
 	if visible:
 		_advance()
-	elif nearby_npc != null:
+	# Durante una transicion GameManager desbloquea al jugador al terminar,
+	# y dejaria el dialogo abierto con el jugador libre.
+	elif nearby_npc != null and not GameManager.is_transitioning:
 		start(nearby_npc.npc_name, nearby_npc.npc_line, nearby_npc.player_name, nearby_npc.player_line)
 
 

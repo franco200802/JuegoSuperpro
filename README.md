@@ -1,9 +1,13 @@
-# JuegoSuperpro
+# JuegoSuperpro v0.1
 
-MVP de un juego 2D de exploración y plataformas, inspirado en la exploración y progresión de **Hollow Knight**, con algunas mecánicas de movimiento estilo **Cuphead** (doble salto y dash).
+Primera versión jugable y acotada de JuegoSuperpro: un juego 2D de exploración y plataformas inspirado en **Hollow Knight**, con doble salto y dash estilo **Cuphead**.
 
-Esta primera entrega cubre aproximadamente el **30% del mundo** planeado: movimiento, salto, doble salto, dash, un NPC con diálogo y zonas del mapa pensadas para habilidades futuras.
+Esta versión incluye dos salas, un enemigo común y un jefe. Se abre y se juega sola, sin depender del proyecto completo.
 
+## Cómo abrirlo
+
+1. Abrir la carpeta con **Godot 4.6** (probado con 4.6.1).
+2. Ejecutar con `F5`. El juego empieza en la Pradera.
 
 ## Controles
 
@@ -13,32 +17,38 @@ Esta primera entrega cubre aproximadamente el **30% del mundo** planeado: movimi
 | Saltar | `Espacio` |
 | Doble salto | `Espacio` (en el aire) |
 | Dash | `Shift` |
-| Interactuar / hablar | `E` |
+| Atacar | `K` o click izquierdo |
+| Interactuar | `E` |
 
-## Shortcuts de testing
+Shortcuts de testing: `H` activa/desactiva el doble salto y `J` el dash (el estado se imprime en la consola de Godot).
 
-Para poder probar rápido las habilidades sin tener que jugar desde cero:
+## Contenido
 
-| Tecla | Efecto |
-|---|---|
-| `H` | Activa / desactiva el **doble salto** |
-| `J` | Activa / desactiva el **dash** |
+- **Pradera** (sala inicial): caracoles que patrullan y un murciélago que persigue al jugador. Por el techo se sube al Bosque.
+- **Bosque**: pelea encerrada contra el **Guardián de Musgo**. Salta hacia el jugador y al caer manda ondas por el piso; cada tanto hace caer rocas del techo. En la segunda mitad de vida encadena dos saltos antes de descansar.
 
-Cada vez que se presionan, el estado queda impreso en la consola de salida de Godot (`Doble salto activado/desactivado`, `Dash activado/desactivado`), para verificar en el momento qué habilidad está prendida.
+Ganarle al Guardián abre las rejas y recupera toda la vida. Esta versión no tiene pantalla de victoria.
 
+## Combate
 
-## Qué hay en esta entrega
-
-- Exploración de un mapa con distintas alturas, plataformas y huecos.
-- Movimiento, salto, doble salto y dash completamente jugables.
-- Cámara que sigue al jugador.
-- Un NPC con diálogo simple (se abre y se cierra con `E`, bloquea el movimiento mientras está abierto).
-- Zonas del mapa intencionalmente inalcanzables con las habilidades actuales, pensadas para desbloquearse en futuras entregas.
+- 5 corazones. Los enemigos, los ataques del jefe y caer por un hueco quitan uno.
+- Al recibir un golpe hay retroceso y un segundo de invulnerabilidad frente a los enemigos. Caer al vacío quita un corazón igual.
+- Al morir se recarga la sala y se aparece en la última puerta por la que se entró, con la vida completa.
 
 ## Estructura
 
 ```
-Assets/     sprites y tiles del pack usado para el escenario y el personaje
-Scenes/     Main, Player, NPC y la caja de diálogo
-Scripts/    lógica de cada escena (un script por escena, sin managers extra)
+Assets/          sprites usados por estas dos salas
+Scenes/          jugador, HUD, caja de diálogo, puertas, tileset y animaciones
+Scenes/Rooms/    Pradera y Bosque
+Scenes/Enemies/  caracol, murciélago, Guardián de Musgo y sus ataques
+Scripts/         lógica del juego y el autoload GameManager
+Scripts/Enemies/ enemigos y jefe (base común en enemy.gd y boss.gd)
 ```
+
+## Origen
+
+Armado el 2026-10-26 a partir del proyecto principal JuegoSuperpro (commit `63b1cd2` más cambios sin commitear de esa fecha, incluidas las correcciones de la auditoría). Respecto de esos archivos, solo cambian:
+
+- `project.godot`: nombre del proyecto y escena inicial (Pradera).
+- `Scenes/Rooms/Pradera.tscn` y `Scenes/Rooms/Bosque.tscn`: se quitaron las puertas hacia salas que no forman parte de esta versión y se cerraron sus huecos en el mapa.
