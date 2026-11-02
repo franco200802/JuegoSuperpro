@@ -18,6 +18,12 @@ var target_door_id: String = ""
 var last_door_id: String = ""
 var is_transitioning: bool = false
 
+# Donde se reaparece al morir en la pelea contra un jefe. Por ahora es el inicio
+# del juego (door_id vacio = posicion del editor); los checkpoints lo van a cambiar.
+var checkpoint_scene: String = ""
+var checkpoint_door_id: String = ""
+var in_boss_fight: bool = false
+
 var health: int = MAX_HEALTH
 # arena_id de las peleas ya ganadas (no se repiten).
 var cleared_arenas: Dictionary = {}
@@ -42,6 +48,10 @@ func _ready() -> void:
 	layer.add_child(fade_rect)
 
 	add_child(preload("res://Scenes/HUD.tscn").instantiate())
+
+	checkpoint_scene = ProjectSettings.get_setting("application/run/main_scene")
+	boss_started.connect(func(_boss_name: String, _max_health: int) -> void: in_boss_fight = true)
+	boss_ended.connect(func() -> void: in_boss_fight = false)
 
 
 func _process(delta: float) -> void:
@@ -88,18 +98,26 @@ func heal_full() -> void:
 
 
 # Al morir: se espera la animacion, se recarga la sala y se aparece en la ultima puerta.
+# Si fue en la pelea contra un jefe, se vuelve al checkpoint.
 func player_died() -> void:
 	if is_transitioning:
 		return
 	is_transitioning = true
 	Player.input_locked = true
+	# Se toma antes de esperar: si el jefe muere durante la animacion, la muerte sigue siendo suya.
+	var died_to_boss: bool = in_boss_fight
 
 	await get_tree().create_timer(DEATH_DELAY).timeout
 	await _fade_to(1.0)
 	boss_ended.emit()
 	heal_full()
+	var scene_path: String = get_tree().current_scene.scene_file_path
 	target_door_id = last_door_id
-	get_tree().change_scene_to_file.call_deferred(get_tree().current_scene.scene_file_path)
+	if died_to_boss:
+		scene_path = checkpoint_scene
+		target_door_id = checkpoint_door_id
+		last_door_id = checkpoint_door_id
+	get_tree().change_scene_to_file.call_deferred(scene_path)
 	await get_tree().scene_changed
 	await _fade_to(0.0)
 

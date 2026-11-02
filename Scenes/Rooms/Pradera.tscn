@@ -1,160 +1,167 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene format=3 uid="uid://dmbxmurn8ljha"]
 
-[ext_resource type="Script" path="res://Scripts/level.gd" id="1"]
-[ext_resource type="TileSet" path="res://Scenes/ground_tileset.tres" id="2"]
-[ext_resource type="Texture2D" path="res://Assets/Sprites/Background/Background.png" id="3"]
+[ext_resource type="Script" uid="uid://ruc57oals6vf" path="res://Scripts/level.gd" id="1"]
+[ext_resource type="TileSet" uid="uid://cfwpf0wq0o8kj" path="res://Scenes/ground_tileset.tres" id="2"]
+[ext_resource type="Texture2D" uid="uid://bmm3kseynobid" path="res://Assets/Sprites/Background/Background.png" id="3"]
 [ext_resource type="PackedScene" path="res://Scenes/Player.tscn" id="4"]
 [ext_resource type="PackedScene" path="res://Scenes/DialogueBox.tscn" id="6"]
 [ext_resource type="PackedScene" path="res://Scenes/TransitionArea.tscn" id="7"]
-[ext_resource type="Texture2D" path="res://Assets/Sprites/Assets/Tiles.png" id="11"]
-[ext_resource type="Texture2D" path="res://Assets/Sprites/Trees/Background.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://0k168woxs0j0" path="res://Assets/Sprites/Assets/Tiles.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://cj67bdwblm5lh" path="res://Assets/Sprites/Trees/Background.png" id="13"]
 [ext_resource type="PackedScene" path="res://Scenes/Enemies/Snail.tscn" id="18"]
 [ext_resource type="PackedScene" path="res://Scenes/Enemies/Bat.tscn" id="19"]
 
-[node name="Pradera" type="Node2D"]
+[node name="Pradera" type="Node2D" unique_id=1985544365]
 script = ExtResource("1")
-map = Array[String](["############################################....############", "############################################....############", "##........................................................##", "##........................................................##", "##........................................................##", "##........................................................##", "##.........................................#######........##", "##........................................................##", "##........................................................##", "##...................................####.................##", "##........................................................##", "##........................................................##", "##...........................#####........................##", "##........................................................##", "##........................................................##", "##..................######................................##", "##........................................................##", "##........................................................##", "##........#######.........................................##", "##..........................###...........................##", "##..........................###...........................##", "############################################################", "############################################################", "############################################################"])
+map = Array[String](["############################################....############", "############################################....############", "##........................................................##", "##........................................................##", "##........................................................##", "##........................................................##", "##.........................................#######........##", "##........................................................##", "##........................................................##", "##...................................####.................##", "##........................................................##", "##........................................................##", "##...........................#####........................##", "##........................................................##", "##........................................................##", "##..................######................................##", "##..........................................................", "##..........................................................", "##........#######...........................................", "##..........................###.............................", "##..........................###.............................", "############################################################", "############################################################", "############################################################"])
 camera_margin_top = 0
 camera_margin_bottom = 0
-terrain = "grass"
-platform_style = "grass"
-back_wall = "none"
 
-[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+[node name="ParallaxBackground" type="ParallaxBackground" parent="." unique_id=724853997]
 
-[node name="Sky" type="ParallaxLayer" parent="ParallaxBackground"]
+[node name="Sky" type="ParallaxLayer" parent="ParallaxBackground" unique_id=1531390124]
 motion_scale = Vector2(0.05, 0)
 motion_mirroring = Vector2(648, 0)
 
-[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/Sky"]
-modulate = Color(1, 1, 1, 1)
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/Sky" unique_id=597333041]
 position = Vector2(324, 180)
 scale = Vector2(1.35, 1.35)
 texture = ExtResource("3")
 
-[node name="Capa1" type="ParallaxLayer" parent="ParallaxBackground"]
+[node name="Capa1" type="ParallaxLayer" parent="ParallaxBackground" unique_id=83901993]
 motion_scale = Vector2(0.2, 0)
 motion_mirroring = Vector2(352, 0)
 
-[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/Capa1"]
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/Capa1" unique_id=618894519]
 modulate = Color(0.85, 0.95, 0.95, 1)
 position = Vector2(176, 232)
 texture = ExtResource("13")
 region_enabled = true
 region_rect = Rect2(352, 0, 352, 256)
 
-[node name="Capa2" type="ParallaxLayer" parent="ParallaxBackground"]
+[node name="Capa2" type="ParallaxLayer" parent="ParallaxBackground" unique_id=1859055922]
 motion_scale = Vector2(0.4, 0)
 motion_mirroring = Vector2(352, 0)
 
-[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/Capa2"]
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/Capa2" unique_id=1666440146]
 modulate = Color(0.9, 0.95, 0.9, 1)
 position = Vector2(176, 262)
 texture = ExtResource("13")
 region_enabled = true
 region_rect = Rect2(0, 0, 352, 256)
 
-[node name="Ground" type="TileMapLayer" parent="."]
+[node name="Ground" type="TileMapLayer" parent="." unique_id=1311182634]
 tile_set = ExtResource("2")
 
-[node name="Decor" type="Node2D" parent="."]
+[node name="Decor" type="Node2D" parent="." unique_id=1355342393]
 
-[node name="Flor_azul1" type="Sprite2D" parent="Decor"]
+[node name="Flor_azul1" type="Sprite2D" parent="Decor" unique_id=633321520]
 position = Vector2(840, 322)
 texture = ExtResource("11")
 region_enabled = true
 region_rect = Rect2(243, 272, 11, 32)
 
-[node name="Hongo1" type="Sprite2D" parent="Decor"]
+[node name="Hongo1" type="Sprite2D" parent="Decor" unique_id=786268073]
 position = Vector2(624, 130)
 texture = ExtResource("11")
 flip_h = true
 region_enabled = true
 region_rect = Rect2(290, 240, 28, 32)
 
-[node name="Lavanda1" type="Sprite2D" parent="Decor"]
+[node name="Lavanda1" type="Sprite2D" parent="Decor" unique_id=1293809684]
 position = Vector2(680, 322)
 texture = ExtResource("11")
 flip_h = true
 region_enabled = true
 region_rect = Rect2(274, 272, 13, 32)
 
-[node name="Flor_blanca1" type="Sprite2D" parent="Decor"]
+[node name="Flor_blanca1" type="Sprite2D" parent="Decor" unique_id=135668482]
 position = Vector2(352, 317)
 texture = ExtResource("11")
 flip_h = true
 region_enabled = true
 region_rect = Rect2(306, 310, 28, 42)
 
-[node name="Flor_blanca2" type="Sprite2D" parent="Decor"]
+[node name="Flor_blanca2" type="Sprite2D" parent="Decor" unique_id=84641180]
 position = Vector2(544, 317)
 texture = ExtResource("11")
 region_enabled = true
 region_rect = Rect2(306, 310, 28, 42)
 
-[node name="Flor_azul2" type="Sprite2D" parent="Decor"]
+[node name="Flor_azul2" type="Sprite2D" parent="Decor" unique_id=336985923]
 position = Vector2(504, 322)
 texture = ExtResource("11")
 region_enabled = true
 region_rect = Rect2(243, 272, 11, 32)
 
-[node name="Hongo_chico1" type="Sprite2D" parent="Decor"]
+[node name="Hongo_chico1" type="Sprite2D" parent="Decor" unique_id=1745451827]
 position = Vector2(136, 327.5)
 texture = ExtResource("11")
 flip_h = true
 region_enabled = true
 region_rect = Rect2(321, 251, 14, 21)
 
-[node name="Flor_blanca3" type="Sprite2D" parent="Decor"]
+[node name="Flor_blanca3" type="Sprite2D" parent="Decor" unique_id=1543948468]
 position = Vector2(784, 317)
 texture = ExtResource("11")
 flip_h = true
 region_enabled = true
 region_rect = Rect2(306, 310, 28, 42)
 
-[node name="Flor_azul3" type="Sprite2D" parent="Decor"]
+[node name="Flor_azul3" type="Sprite2D" parent="Decor" unique_id=929823827]
 position = Vector2(424, 322)
 texture = ExtResource("11")
 region_enabled = true
 region_rect = Rect2(243, 272, 11, 32)
 
-[node name="Hongo2" type="Sprite2D" parent="Decor"]
+[node name="Hongo2" type="Sprite2D" parent="Decor" unique_id=778061985]
 position = Vector2(368, 226)
 texture = ExtResource("11")
 flip_h = true
 region_enabled = true
 region_rect = Rect2(290, 240, 28, 32)
 
-[node name="Flor_azul4" type="Sprite2D" parent="Decor"]
+[node name="Flor_azul4" type="Sprite2D" parent="Decor" unique_id=1992281080]
 position = Vector2(488, 178)
 texture = ExtResource("11")
 region_enabled = true
 region_rect = Rect2(243, 272, 11, 32)
 
-[node name="Enemies" type="Node2D" parent="."]
+[node name="Enemies" type="Node2D" parent="." unique_id=373403368]
 
-[node name="Snail1" parent="Enemies" instance=ExtResource("18")]
+[node name="Snail1" parent="Enemies" unique_id=1899997961 instance=ExtResource("18")]
 position = Vector2(360, 320)
 
-[node name="Snail2" parent="Enemies" instance=ExtResource("18")]
+[node name="Snail2" parent="Enemies" unique_id=269064350 instance=ExtResource("18")]
 position = Vector2(776, 320)
 
-[node name="Bat1" parent="Enemies" instance=ExtResource("19")]
+[node name="Bat1" parent="Enemies" unique_id=1148361432 instance=ExtResource("19")]
 position = Vector2(568, 136)
 
-[node name="Doors" type="Node2D" parent="."]
+[node name="Doors" type="Node2D" parent="." unique_id=2125679602]
 
-[node name="HaciaBosque" parent="Doors" instance=ExtResource("7")]
+[node name="HaciaPozo" parent="Doors" instance=ExtResource("7")]
+position = Vector2(952, 304)
+door_id = "pradera_b"
+target_scene = "res://Scenes/Rooms/Pozo.tscn"
+target_door_id = "pozo_b"
+area_size = Vector2(16, 64)
+
+[node name="SpawnPoint" parent="Doors/HaciaPozo" index="1"]
+position = Vector2(-48, 12)
+
+
+[node name="HaciaAcantilado" parent="Doors" unique_id=1352557578 instance=ExtResource("7")]
 position = Vector2(736, -16)
 door_id = "pradera_c"
-target_scene = "res://Scenes/Rooms/Bosque.tscn"
-target_door_id = "bosque_a"
+target_scene = "res://Scenes/Rooms/Acantilado.tscn"
+target_door_id = "acantilado_a"
 area_size = Vector2(64, 48)
 
-[node name="SpawnPoint" parent="Doors/HaciaBosque" index="1"]
+[node name="SpawnPoint" parent="Doors/HaciaAcantilado" index="1"]
 position = Vector2(-40, 92)
 
-[node name="Player" parent="." instance=ExtResource("4")]
+[node name="Player" parent="." unique_id=1516554234 instance=ExtResource("4")]
 position = Vector2(56, 316)
 
-[node name="DialogueBox" parent="." instance=ExtResource("6")]
+[node name="DialogueBox" parent="." unique_id=1403010975 instance=ExtResource("6")]

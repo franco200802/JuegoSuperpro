@@ -1,0 +1,241 @@
+[gd_scene load_steps=19 format=3]
+
+[ext_resource type="Script" path="res://Scripts/level.gd" id="1"]
+[ext_resource type="TileSet" path="res://Scenes/ground_tileset.tres" id="2"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Background/Background.png" id="3"]
+[ext_resource type="PackedScene" path="res://Scenes/Player.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://Scenes/NPC.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://Scenes/DialogueBox.tscn" id="6"]
+[ext_resource type="PackedScene" path="res://Scenes/TransitionArea.tscn" id="7"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Assets/Tiles.png" id="11"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Assets/Props-Rocks.png" id="12"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Assets/Buildings.png" id="14"]
+[ext_resource type="Script" path="res://Scripts/arena.gd" id="15"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Combat/gate_v.png" id="16"]
+[ext_resource type="PackedScene" path="res://Scenes/Enemies/Snail.tscn" id="18"]
+[ext_resource type="PackedScene" path="res://Scenes/Enemies/GiantSnail.tscn" id="20"]
+
+[sub_resource type="Gradient" id="Gradient_luz"]
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(1.8, 1.7, 0.8, 0, 1.8, 1.7, 0.8, 1, 1.8, 1.7, 0.8, 0)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_trigger"]
+size = Vector2(816, 320)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gate1"]
+size = Vector2(16, 320)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gate2"]
+size = Vector2(16, 64)
+
+[node name="Cavernas" type="Node2D"]
+script = ExtResource("1")
+map = Array[String](["################################################################################", "################################################################################", "#########.....................###############################.................##", "#########.....................###############################.................##", "#########...............................#########.............................##", "#########.....................................................................##", "######################........................................................##", "#########.....................................................................##", "#########.....................................................................##", "#########................#####................................................##", "#########.....................................................................##", "#########.....................................................................##", "#########........................#####........................................##", "##............................................................................##", "##............................................................................##", "##.......................................#####................................##", "##............................................................................##", "##............................................................................##", "##...............................................#####..........................", "##..............................................................................", "##..............................................................................", "##..............................................................................", "################################################################################", "################################################################################", "################################################################################", "################################################################################"])
+camera_margin_top = 0
+camera_margin_bottom = 0
+terrain = "stone"
+platform_style = "plank"
+back_wall = "stone"
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+color = Color(0.75, 0.8, 0.95, 1)
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="Sky" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.05, 0)
+motion_mirroring = Vector2(648, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/Sky"]
+modulate = Color(0.12, 0.12, 0.18, 1)
+position = Vector2(324, 180)
+scale = Vector2(1.35, 1.35)
+texture = ExtResource("3")
+
+[node name="Ground" type="TileMapLayer" parent="."]
+tile_set = ExtResource("2")
+
+[node name="Decor" type="Node2D" parent="."]
+
+[node name="Mina" type="Sprite2D" parent="Decor"]
+position = Vector2(96, 276)
+texture = ExtResource("14")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(272, 208, 128, 160)
+
+[node name="Hongo1" type="Sprite2D" parent="Decor"]
+position = Vector2(416, 338)
+texture = ExtResource("11")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(290, 240, 28, 32)
+
+[node name="Piedras1" type="Sprite2D" parent="Decor"]
+position = Vector2(856, 338)
+texture = ExtResource("11")
+region_enabled = true
+region_rect = Rect2(0, 336, 80, 32)
+
+[node name="Planta_azul1" type="Sprite2D" parent="Decor"]
+position = Vector2(592, 335.5)
+texture = ExtResource("11")
+region_enabled = true
+region_rect = Rect2(274, 315, 28, 37)
+
+[node name="Roca1" type="Sprite2D" parent="Decor"]
+position = Vector2(672, 333)
+texture = ExtResource("12")
+region_enabled = true
+region_rect = Rect2(222, 6, 50, 42)
+
+[node name="Roca_alta1" type="Sprite2D" parent="Decor"]
+position = Vector2(272, 315)
+texture = ExtResource("12")
+region_enabled = true
+region_rect = Rect2(6, 2, 55, 78)
+
+[node name="Hongo_chico1" type="Sprite2D" parent="Decor"]
+position = Vector2(792, 279.5)
+texture = ExtResource("11")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(321, 251, 14, 21)
+
+[node name="Roca_alta2" type="Sprite2D" parent="Decor"]
+position = Vector2(1056, 315)
+texture = ExtResource("12")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(6, 2, 55, 78)
+
+[node name="Hongo_chico2" type="Sprite2D" parent="Decor"]
+position = Vector2(1144, 343.5)
+texture = ExtResource("11")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(321, 251, 14, 21)
+
+[node name="Hongo2" type="Sprite2D" parent="Decor"]
+position = Vector2(288, 82)
+texture = ExtResource("11")
+region_enabled = true
+region_rect = Rect2(290, 240, 28, 32)
+
+[node name="Hongo3" type="Sprite2D" parent="Decor"]
+position = Vector2(704, 226)
+texture = ExtResource("11")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(290, 240, 28, 32)
+
+[node name="Roca2" type="Sprite2D" parent="Decor"]
+position = Vector2(944, 333)
+texture = ExtResource("12")
+region_enabled = true
+region_rect = Rect2(222, 6, 50, 42)
+
+[node name="Planta_azul2" type="Sprite2D" parent="Decor"]
+position = Vector2(752, 335.5)
+texture = ExtResource("11")
+region_enabled = true
+region_rect = Rect2(274, 315, 28, 37)
+
+[node name="Hongo_chico3" type="Sprite2D" parent="Decor"]
+position = Vector2(200, 343.5)
+texture = ExtResource("11")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(321, 251, 14, 21)
+
+[node name="Luciernagas" type="CPUParticles2D" parent="."]
+position = Vector2(640, 208)
+amount = 59
+lifetime = 6.0
+preprocess = 6.0
+emission_shape = 3
+emission_rect_extents = Vector2(640, 208)
+direction = Vector2(1, -0.3)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 3.0
+initial_velocity_max = 10.0
+scale_amount_min = 1.0
+scale_amount_max = 2.0
+color_ramp = SubResource("Gradient_luz")
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="Snail1" parent="Enemies" instance=ExtResource("18")]
+position = Vector2(264, 336)
+
+[node name="Arena" type="Node2D" parent="."]
+script = ExtResource("15")
+arena_id = "cavernas_jefe"
+heal_on_clear = true
+
+[node name="Trigger" type="Area2D" parent="Arena"]
+collision_layer = 0
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Arena/Trigger"]
+position = Vector2(792, 192)
+shape = SubResource("RectangleShape2D_trigger")
+
+[node name="Gates" type="Node2D" parent="Arena"]
+
+[node name="Gate1" type="StaticBody2D" parent="Arena/Gates"]
+position = Vector2(376, 192)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Arena/Gates/Gate1"]
+shape = SubResource("RectangleShape2D_gate1")
+disabled = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Arena/Gates/Gate1"]
+visible = false
+texture_repeat = 2
+texture = ExtResource("16")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 320)
+
+[node name="Gate2" type="StaticBody2D" parent="Arena/Gates"]
+position = Vector2(1256, 320)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Arena/Gates/Gate2"]
+shape = SubResource("RectangleShape2D_gate2")
+disabled = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Arena/Gates/Gate2"]
+visible = false
+texture_repeat = 2
+texture = ExtResource("16")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 64)
+
+[node name="Wave1" type="Node2D" parent="Arena"]
+
+[node name="GiantSnail1" parent="Arena/Wave1" instance=ExtResource("20")]
+position = Vector2(968, 304)
+
+[node name="Doors" type="Node2D" parent="."]
+
+[node name="HaciaPozo" parent="Doors" instance=ExtResource("7")]
+position = Vector2(1272, 320)
+door_id = "cavernas_b"
+target_scene = "res://Scenes/Rooms/Pozo.tscn"
+target_door_id = "pozo_a"
+area_size = Vector2(16, 64)
+
+[node name="SpawnPoint" parent="Doors/HaciaPozo" index="1"]
+position = Vector2(-48, 12)
+
+[node name="NpcMinero" parent="." instance=ExtResource("5")]
+position = Vector2(104, 337)
+npc_name = "Minero"
+npc_line = "Este pozo conecta con todo. Si subis lo suficiente vas a ver la cima."
+player_line = "Entonces voy a seguir subiendo."
+
+[node name="Player" parent="." instance=ExtResource("4")]
+position = Vector2(200, 76)
+
+[node name="DialogueBox" parent="." instance=ExtResource("6")]
