@@ -1,0 +1,261 @@
+[gd_scene load_steps=19 format=3]
+
+[ext_resource type="Script" path="res://Scripts/level.gd" id="1"]
+[ext_resource type="TileSet" path="res://Scenes/ground_tileset.tres" id="2"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Background/Background.png" id="3"]
+[ext_resource type="PackedScene" path="res://Scenes/Player.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://Scenes/NPC.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://Scenes/DialogueBox.tscn" id="6"]
+[ext_resource type="PackedScene" path="res://Scenes/TransitionArea.tscn" id="7"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Assets/Tiles.png" id="11"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Assets/Props-Rocks.png" id="12"]
+[ext_resource type="Script" path="res://Scripts/arena.gd" id="15"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Combat/gate_v.png" id="16"]
+[ext_resource type="PackedScene" path="res://Scenes/Enemies/Snail.tscn" id="18"]
+[ext_resource type="PackedScene" path="res://Scenes/Enemies/Bat.tscn" id="19"]
+[ext_resource type="PackedScene" path="res://Scenes/Enemies/Boar.tscn" id="20"]
+[ext_resource type="PackedScene" path="res://Scenes/RestPoint.tscn" id="21"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_trigger"]
+size = Vector2(688, 160)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gate1"]
+size = Vector2(16, 304)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gate2"]
+size = Vector2(16, 64)
+
+[node name="Ruinas" type="Node2D"]
+script = ExtResource("1")
+map = Array[String](["#######....###########################################################", "#######....###########################################################", "##..................................................................##", "##..................................................................##", "##..................................................................##", "##..................................................................##", "##..#########.......................................................##", "##..................................................................##", "##....................................................................", "##............####....................................................", "##............................##............##..........##............", "##............................##............##..........##............", "##..................##################################################", "##..................##..............................................##", "##..................##..............................................##", "##..................##..............................................##", "##.............####.##..............................................##", "##..................##..............................................##", "##.......####.......##..............................................##", "##..................##..............................................##", "##..................##..............................................##", "######################################################################", "######################################################################", "######################################################################"])
+camera_margin_top = 0
+camera_margin_bottom = 0
+terrain = "stone"
+platform_style = "brick"
+back_wall = "brick"
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+color = Color(0.8, 0.75, 0.9, 1)
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="Sky" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.05, 0)
+motion_mirroring = Vector2(648, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/Sky"]
+modulate = Color(0.12, 0.12, 0.18, 1)
+position = Vector2(324, 180)
+scale = Vector2(1.35, 1.35)
+texture = ExtResource("3")
+
+[node name="Ground" type="TileMapLayer" parent="."]
+tile_set = ExtResource("2")
+
+[node name="Decor" type="Node2D" parent="."]
+
+[node name="Piedra_runa1" type="Sprite2D" parent="Decor"]
+position = Vector2(600, 172.5)
+texture = ExtResource("12")
+region_enabled = true
+region_rect = Rect2(166, 213, 52, 43)
+
+[node name="Menhir31" type="Sprite2D" parent="Decor"]
+position = Vector2(104, 306.5)
+texture = ExtResource("12")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(117, 193, 36, 63)
+
+[node name="Vasija_verde1" type="Sprite2D" parent="Decor"]
+position = Vector2(456, 178)
+texture = ExtResource("11")
+region_enabled = true
+region_rect = Rect2(336, 304, 16, 32)
+
+[node name="Vasija_verde2" type="Sprite2D" parent="Decor"]
+position = Vector2(1048, 322)
+texture = ExtResource("11")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(336, 304, 16, 32)
+
+[node name="Vasija_verde3" type="Sprite2D" parent="Decor"]
+position = Vector2(456, 322)
+texture = ExtResource("11")
+region_enabled = true
+region_rect = Rect2(336, 304, 16, 32)
+
+[node name="Vasija_verde4" type="Sprite2D" parent="Decor"]
+position = Vector2(264, 242)
+texture = ExtResource("11")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(336, 304, 16, 32)
+
+[node name="Vasija_verde5" type="Sprite2D" parent="Decor"]
+position = Vector2(264, 130)
+texture = ExtResource("11")
+region_enabled = true
+region_rect = Rect2(336, 304, 16, 32)
+
+[node name="Vasija_verde6" type="Sprite2D" parent="Decor"]
+position = Vector2(856, 322)
+texture = ExtResource("11")
+region_enabled = true
+region_rect = Rect2(336, 304, 16, 32)
+
+[node name="Vasija_roja1" type="Sprite2D" parent="Decor"]
+position = Vector2(216, 322)
+texture = ExtResource("11")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(368, 304, 16, 32)
+
+[node name="Menhir21" type="Sprite2D" parent="Decor"]
+position = Vector2(968, 298.5)
+texture = ExtResource("12")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(71, 177, 37, 79)
+
+[node name="Vasija_verde7" type="Sprite2D" parent="Decor"]
+position = Vector2(872, 178)
+texture = ExtResource("11")
+region_enabled = true
+region_rect = Rect2(336, 304, 16, 32)
+
+[node name="Menhir32" type="Sprite2D" parent="Decor"]
+position = Vector2(632, 306.5)
+texture = ExtResource("12")
+region_enabled = true
+region_rect = Rect2(117, 193, 36, 63)
+
+[node name="Vasija_rota1" type="Sprite2D" parent="Decor"]
+position = Vector2(504, 324)
+texture = ExtResource("11")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(352, 308, 16, 28)
+
+[node name="Vasija_verde8" type="Sprite2D" parent="Decor"]
+position = Vector2(424, 322)
+texture = ExtResource("11")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(336, 304, 16, 32)
+
+[node name="Vasija_roja2" type="Sprite2D" parent="Decor"]
+position = Vector2(40, 322)
+texture = ExtResource("11")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(368, 304, 16, 32)
+
+[node name="Vasija_verde9" type="Sprite2D" parent="Decor"]
+position = Vector2(904, 146)
+texture = ExtResource("11")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(336, 304, 16, 32)
+
+[node name="Arena" type="Node2D" parent="."]
+script = ExtResource("15")
+arena_id = "ruinas_emboscada"
+
+[node name="Trigger" type="Area2D" parent="Arena"]
+collision_layer = 0
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Arena/Trigger"]
+position = Vector2(680, 112)
+shape = SubResource("RectangleShape2D_trigger")
+
+[node name="Gates" type="Node2D" parent="Arena"]
+
+[node name="Gate1" type="StaticBody2D" parent="Arena/Gates"]
+position = Vector2(312, 184)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Arena/Gates/Gate1"]
+shape = SubResource("RectangleShape2D_gate1")
+disabled = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Arena/Gates/Gate1"]
+visible = false
+texture_repeat = 2
+texture = ExtResource("16")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 304)
+
+[node name="Gate2" type="StaticBody2D" parent="Arena/Gates"]
+position = Vector2(1096, 160)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Arena/Gates/Gate2"]
+shape = SubResource("RectangleShape2D_gate2")
+disabled = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Arena/Gates/Gate2"]
+visible = false
+texture_repeat = 2
+texture = ExtResource("16")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 64)
+
+[node name="Wave1" type="Node2D" parent="Arena"]
+
+[node name="Snail1" parent="Arena/Wave1" instance=ExtResource("18")]
+position = Vector2(568, 176)
+
+[node name="Boar1" parent="Arena/Wave1" instance=ExtResource("20")]
+position = Vector2(840, 176)
+
+[node name="Wave2" type="Node2D" parent="Arena"]
+
+[node name="Bat1" parent="Arena/Wave2" instance=ExtResource("19")]
+position = Vector2(456, 88)
+
+[node name="Bat2" parent="Arena/Wave2" instance=ExtResource("19")]
+position = Vector2(776, 72)
+
+[node name="Bat3" parent="Arena/Wave2" instance=ExtResource("19")]
+position = Vector2(968, 104)
+
+[node name="Boar2" parent="Arena/Wave2" instance=ExtResource("20")]
+position = Vector2(680, 176)
+
+[node name="Doors" type="Node2D" parent="."]
+
+[node name="HaciaBosque" parent="Doors" instance=ExtResource("7")]
+position = Vector2(1112, 160)
+door_id = "ruinas_a"
+target_scene = "res://Scenes/Rooms/Bosque.tscn"
+target_door_id = "bosque_b"
+area_size = Vector2(16, 64)
+
+[node name="SpawnPoint" parent="Doors/HaciaBosque" index="1"]
+position = Vector2(-64, 12)
+
+[node name="HaciaTorre" parent="Doors" instance=ExtResource("7")]
+position = Vector2(144, -16)
+door_id = "ruinas_b"
+target_scene = "res://Scenes/Rooms/Torre.tscn"
+target_door_id = "torre_a"
+area_size = Vector2(64, 48)
+
+[node name="SpawnPoint" parent="Doors/HaciaTorre" index="1"]
+position = Vector2(-56, 92)
+
+[node name="NpcGuardian" parent="." instance=ExtResource("5")]
+position = Vector2(648, 177)
+npc_name = "Guardian"
+npc_line = "Los jabalies de las ruinas embisten sin mirar. Si chocan contra un pilar, quedan aturdidos."
+player_line = "Entonces voy a pelear cerca de los pilares."
+
+[node name="Farol" parent="." instance=ExtResource("21")]
+position = Vector2(72, 336)
+spot_id = "ruinas_farol"
+
+[node name="Player" parent="." instance=ExtResource("4")]
+position = Vector2(1048, 172)
+
+[node name="DialogueBox" parent="." instance=ExtResource("6")]

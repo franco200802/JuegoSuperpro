@@ -1,11 +1,8 @@
 extends Area2D
 
-# Onda de polvo que avanza por el piso y lastima al jugador.
-
 const SPEED: float = 210.0
 
 var direction: float = 1.0
-# Bordes de la arena en x: la onda desaparece al llegar.
 var limits := Vector2(-INF, INF)
 
 

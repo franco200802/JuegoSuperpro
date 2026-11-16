@@ -1,8 +1,5 @@
 extends Area2D
 
-# Roca que tiembla en el techo un momento (aviso) y despues cae.
-# Se rompe al tocar el piso; lastima al jugador si le cae encima.
-
 const GRAVITY: float = 900.0
 
 var delay: float = 0.5
@@ -39,7 +36,6 @@ func _on_body_entered(body: Node) -> void:
 
 func _break() -> void:
 	set_deferred("monitoring", false)
-	# Ignora otro body_entered antes de que se aplique el monitoring diferido.
 	falling = false
 	set_physics_process(false)
 	var tween := create_tween()

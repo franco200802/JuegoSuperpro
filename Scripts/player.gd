@@ -1,7 +1,6 @@
 class_name Player
 extends CharacterBody2D
 
-# Bloquea el movimiento del jugador mientras hay un dialogo abierto o una transicion.
 static var input_locked: bool = false
 
 const SPEED: float = 140.0
@@ -12,6 +11,9 @@ const GRAVITY: float = 900.0
 const MAX_FALL_SPEED: float = 420.0
 const JUMP_VELOCITY: float = -300.0
 const DOUBLE_JUMP_VELOCITY: float = -260.0
+const JUMP_CUT: float = 0.45
+const COYOTE_TIME: float = 0.1
+const JUMP_BUFFER: float = 0.12
 
 const DASH_SPEED: float = 380.0
 const DASH_TIME: float = 0.15
@@ -19,56 +21,61 @@ const DASH_COOLDOWN: float = 0.5
 
 const ATTACK_DAMAGE: int = 1
 const ATTACK_COOLDOWN: float = 0.3
-# Retroceso del jugador al pegarle a algo.
 const ATTACK_RECOIL: float = 110.0
 const HITBOX_OFFSET: float = 26.0
+const HITBOX_REACH: float = 32.0
+const POGO_VELOCITY: float = -290.0
 
 const INVULNERABLE_TIME: float = 1.0
 const HURT_TIME: float = 0.25
 const KNOCKBACK := Vector2(200.0, -180.0)
+const SAFE_GROUND_FRAMES: int = 10
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var hitbox: Area2D = $Hitbox
-
-var double_jump_enabled: bool = true
-var dash_enabled: bool = true
+@onready var slash: Node2D = $Slash
 
 var facing: int = 1
 var jumps_left: int = 1
+var coyote_left: float = 0.0
+var jump_buffer_left: float = 0.0
+var is_jumping: bool = false
 
 var is_dashing: bool = false
 var dash_time_left: float = 0.0
 var dash_cooldown_left: float = 0.0
 var dash_direction: float = 1.0
+var air_dash_used: bool = false
 
 var is_attacking: bool = false
 var attack_cooldown_left: float = 0.0
-# Alterna entre los dos cortes de la animacion de ataque.
 var next_attack_b: bool = false
 
 var invulnerable_left: float = 0.0
 var hurt_left: float = 0.0
 var is_dead: bool = false
-# Frame de fisica del ultimo corazon perdido.
 var last_damage_frame: int = -2
+
+var safe_position: Vector2
+var ground_trail: Array[Vector2] = []
 
 
 func _ready() -> void:
 	add_to_group("player")
+	safe_position = global_position
 	sprite.animation_finished.connect(_on_animation_finished)
 
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("toggle_double_jump"):
-		double_jump_enabled = not double_jump_enabled
-		print("Doble salto activado" if double_jump_enabled else "Doble salto desactivado")
+		GameManager.has_double_jump = not GameManager.has_double_jump
+		print("Doble salto activado" if GameManager.has_double_jump else "Doble salto desactivado")
 	elif event.is_action_pressed("toggle_dash"):
-		dash_enabled = not dash_enabled
-		print("Dash activado" if dash_enabled else "Dash desactivado")
+		GameManager.has_dash = not GameManager.has_dash
+		print("Dash activado" if GameManager.has_dash else "Dash desactivado")
 
 
 func _process(delta: float) -> void:
-	# Parpadeo mientras dura la invulnerabilidad.
 	if invulnerable_left > 0.0 and not is_dead:
 		invulnerable_left -= delta
 		sprite.self_modulate.a = 0.35 if int(invulnerable_left * 15.0) % 2 == 0 else 1.0
@@ -81,17 +88,22 @@ func _physics_process(delta: float) -> void:
 		attack_cooldown_left -= delta
 
 	if is_dead or input_locked or hurt_left > 0.0:
-		hurt_left -= delta
+		hurt_left = maxf(hurt_left - delta, 0.0)
+		jump_buffer_left = 0.0
 		velocity.x = move_toward(velocity.x, 0.0, FRICTION * delta * (0.4 if hurt_left > 0.0 else 1.0))
-		velocity.y = 0.0 if is_on_floor() and velocity.y > 0.0 else min(velocity.y + GRAVITY * delta, MAX_FALL_SPEED)
+		velocity.y = 0.0 if is_on_floor() and velocity.y > 0.0 else minf(velocity.y + GRAVITY * delta, MAX_FALL_SPEED)
 		move_and_slide()
 		_update_animation()
 		return
 
 	if dash_cooldown_left > 0.0:
 		dash_cooldown_left -= delta
+	if Input.is_action_just_pressed("jump"):
+		jump_buffer_left = JUMP_BUFFER
+	else:
+		jump_buffer_left -= delta
 
-	if Input.is_action_just_pressed("dash") and dash_enabled and not is_dashing and dash_cooldown_left <= 0.0:
+	if Input.is_action_just_pressed("dash") and _can_dash():
 		_start_dash()
 
 	if is_dashing:
@@ -108,10 +120,7 @@ func _physics_process(delta: float) -> void:
 			_attack()
 
 	move_and_slide()
-
-	if is_on_floor():
-		jumps_left = 1 if double_jump_enabled else 0
-
+	_update_ground(delta)
 	_update_animation()
 
 
@@ -120,7 +129,6 @@ func _handle_movement(delta: float) -> void:
 
 	if input_dir != 0.0:
 		velocity.x = move_toward(velocity.x, input_dir * SPEED, ACCELERATION * delta)
-		# No se da vuelta en medio de un corte.
 		if not is_attacking:
 			facing = signi(input_dir)
 	else:
@@ -129,28 +137,61 @@ func _handle_movement(delta: float) -> void:
 	if is_on_floor():
 		velocity.y = 0.0
 	else:
-		velocity.y = min(velocity.y + GRAVITY * delta, MAX_FALL_SPEED)
+		velocity.y = minf(velocity.y + GRAVITY * delta, MAX_FALL_SPEED)
 
 
 func _handle_jump() -> void:
-	if not Input.is_action_just_pressed("jump"):
-		return
-
-	if is_on_floor():
-		velocity.y = JUMP_VELOCITY
-	elif jumps_left > 0:
-		velocity.y = DOUBLE_JUMP_VELOCITY
+	if jump_buffer_left > 0.0 and coyote_left > 0.0:
+		_jump(JUMP_VELOCITY, "jump")
+	elif jump_buffer_left > 0.0 and jumps_left > 0:
 		jumps_left -= 1
+		_jump(DOUBLE_JUMP_VELOCITY, "double_jump")
+
+	if is_jumping and (velocity.y >= 0.0 or not Input.is_action_pressed("jump")):
+		if velocity.y < 0.0:
+			velocity.y *= JUMP_CUT
+		is_jumping = false
+
+
+func _jump(jump_velocity: float, sound: String) -> void:
+	velocity.y = jump_velocity
+	is_jumping = true
+	coyote_left = 0.0
+	jump_buffer_left = 0.0
+	Sfx.play(sound)
+
+
+func _update_ground(delta: float) -> void:
+	if not is_on_floor():
+		coyote_left -= delta
+		ground_trail.clear()
+		return
+	coyote_left = COYOTE_TIME
+	jumps_left = 1 if GameManager.has_double_jump else 0
+	air_dash_used = false
+	ground_trail.append(global_position)
+	if ground_trail.size() > SAFE_GROUND_FRAMES:
+		safe_position = ground_trail.pop_front()
+
+
+func _can_dash() -> bool:
+	if not GameManager.has_dash or is_dashing or dash_cooldown_left > 0.0:
+		return false
+	return is_on_floor() or not air_dash_used
 
 
 func _start_dash() -> void:
 	var input_dir: float = Input.get_axis("move_left", "move_right")
 	dash_direction = input_dir if input_dir != 0.0 else float(facing)
+	facing = int(dash_direction)
 	is_dashing = true
+	is_jumping = false
 	is_attacking = false
+	air_dash_used = not is_on_floor()
 	dash_time_left = DASH_TIME
 	dash_cooldown_left = DASH_COOLDOWN
 	sprite.modulate.a = 0.6
+	Sfx.play("dash")
 
 
 func _attack() -> void:
@@ -159,46 +200,78 @@ func _attack() -> void:
 	sprite.play("attack_b" if next_attack_b else "attack_a")
 	next_attack_b = not next_attack_b
 
-	hitbox.position.x = HITBOX_OFFSET * facing
-	var hit_something: bool = false
-	for body in _bodies_in_hitbox():
-		if body.has_method("take_hit"):
-			body.take_hit(ATTACK_DAMAGE, global_position)
-			hit_something = true
-	if hit_something:
+	var direction := Vector2(facing, 0.0)
+	if Input.is_action_pressed("move_up"):
+		direction = Vector2.UP
+	elif Input.is_action_pressed("move_down") and not is_on_floor():
+		direction = Vector2.DOWN
+	hitbox.position = Vector2(HITBOX_OFFSET * facing, -2.0) if direction.y == 0.0 else direction * HITBOX_REACH
+	slash.play(direction)
+	Sfx.play("attack")
+
+	var hit_enemy: bool = false
+	var hit_spikes: bool = false
+	for collider in _colliders_in_hitbox():
+		if collider.has_method("take_hit"):
+			collider.take_hit(ATTACK_DAMAGE, global_position)
+			hit_enemy = true
+		elif collider.is_in_group("spikes"):
+			hit_spikes = true
+	if not hit_enemy and not hit_spikes:
+		return
+
+	if direction == Vector2.DOWN:
+		_pogo()
+	elif direction.y == 0.0:
 		velocity.x = -facing * ATTACK_RECOIL
+	if hit_enemy:
 		GameManager.shake(2.0)
+		GameManager.hitstop(0.035)
 
 
-# El Area2D recien actualiza sus solapamientos en el proximo paso de fisica,
-# asi que se consulta el espacio con la forma ya ubicada del lado al que mira.
-func _bodies_in_hitbox() -> Array[Node2D]:
+func _pogo() -> void:
+	velocity.y = POGO_VELOCITY
+	is_jumping = false
+	jumps_left = 1 if GameManager.has_double_jump else 0
+	air_dash_used = false
+	Sfx.play("pogo")
+
+
+func _colliders_in_hitbox() -> Array[Node2D]:
 	var shape_node: CollisionShape2D = hitbox.get_node("CollisionShape2D")
 	var query := PhysicsShapeQueryParameters2D.new()
 	query.shape = shape_node.shape
 	query.transform = shape_node.global_transform
 	query.collision_mask = hitbox.collision_mask
+	query.collide_with_areas = true
 	query.exclude = [get_rid()]
-	var bodies: Array[Node2D] = []
+	var colliders: Array[Node2D] = []
 	for hit in get_world_2d().direct_space_state.intersect_shape(query):
-		if hit.collider not in bodies:
-			bodies.append(hit.collider)
-	return bodies
+		if hit.collider not in colliders:
+			colliders.append(hit.collider)
+	return colliders
 
 
-# Ataques de enemigos y proyectiles: respetan la invulnerabilidad.
 func take_damage(amount: int, from_position: Vector2) -> void:
 	if invulnerable_left > 0.0:
 		return
 	_apply_damage(amount, from_position)
 
 
-# Caer al vacio cuesta un corazon aunque el jugador sea invulnerable a los ataques,
-# salvo que un golpe ya le haya quitado uno en este mismo instante.
 func take_fall_damage(amount: int) -> void:
 	if Engine.get_physics_frames() - last_damage_frame <= 1:
 		return
 	_apply_damage(amount, global_position)
+
+
+func hurt_by_hazard() -> void:
+	if is_dead or GameManager.is_transitioning:
+		return
+	take_fall_damage(1)
+	global_position = safe_position
+	velocity = Vector2.ZERO
+	ground_trail.clear()
+	is_jumping = false
 
 
 func _apply_damage(amount: int, from_position: Vector2) -> void:
@@ -207,10 +280,12 @@ func _apply_damage(amount: int, from_position: Vector2) -> void:
 	last_damage_frame = Engine.get_physics_frames()
 	is_dashing = false
 	is_attacking = false
+	is_jumping = false
 	sprite.modulate.a = 1.0
 	if GameManager.damage_player(amount):
 		_die()
 		return
+	Sfx.play("hurt")
 	invulnerable_left = INVULNERABLE_TIME
 	hurt_left = HURT_TIME
 	var away: float = signf(global_position.x - from_position.x)
@@ -223,6 +298,7 @@ func _die() -> void:
 	is_dead = true
 	velocity.x = 0.0
 	sprite.play("dead")
+	Sfx.play("death")
 	GameManager.player_died()
 
 
@@ -233,9 +309,7 @@ func _on_animation_finished() -> void:
 
 func _update_animation() -> void:
 	sprite.flip_h = facing < 0
-	if is_dead:
-		return
-	if is_attacking:
+	if is_dead or is_attacking:
 		return
 
 	if not is_on_floor():

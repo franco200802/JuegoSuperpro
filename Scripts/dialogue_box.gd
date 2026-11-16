@@ -3,7 +3,6 @@ extends CanvasLayer
 @onready var name_label: Label = $Panel/NameLabel
 @onready var text_label: Label = $Panel/TextLabel
 
-# NPC con el que el jugador esta en rango de interactuar (null si no hay ninguno).
 var nearby_npc: Node = null
 
 var lines: Array = []
@@ -21,8 +20,6 @@ func _process(_delta: float) -> void:
 
 	if visible:
 		_advance()
-	# Durante una transicion GameManager desbloquea al jugador al terminar,
-	# y dejaria el dialogo abierto con el jugador libre.
 	elif nearby_npc != null and not GameManager.is_transitioning:
 		start(nearby_npc.npc_name, nearby_npc.npc_line, nearby_npc.player_name, nearby_npc.player_line)
 

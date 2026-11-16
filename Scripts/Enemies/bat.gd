@@ -1,7 +1,5 @@
 extends Enemy
 
-# Murcielago: flota quieto hasta ver al jugador y despues lo persigue en zigzag.
-
 @export var speed: float = 65.0
 @export var sight_range: float = 170.0
 

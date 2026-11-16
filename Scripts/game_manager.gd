@@ -1,32 +1,27 @@
 extends Node
 
-# Autoload "GameManager": sobrevive a los cambios de escena y guarda
-# la informacion que una sala necesita de la anterior (puerta, vida, peleas ganadas).
-
 signal health_changed(health: int, max_health: int)
 signal boss_started(boss_name: String, max_health: int)
 signal boss_health_changed(health: int)
 signal boss_ended
+signal notice(text: String)
 
 const FADE_TIME: float = 0.25
 const MAX_HEALTH: int = 5
 const DEATH_DELAY: float = 1.2
 
-# door_id de la TransitionArea donde debe aparecer el jugador en la proxima sala.
 var target_door_id: String = ""
-# Puerta por la que se entro a la sala actual: ahi se reaparece al morir.
 var last_door_id: String = ""
 var is_transitioning: bool = false
 
-# Donde se reaparece al morir en la pelea contra un jefe. Por ahora es el inicio
-# del juego (door_id vacio = posicion del editor); los checkpoints lo van a cambiar.
 var checkpoint_scene: String = ""
 var checkpoint_door_id: String = ""
 var in_boss_fight: bool = false
 
 var health: int = MAX_HEALTH
-# arena_id de las peleas ya ganadas (no se repiten).
 var cleared_arenas: Dictionary = {}
+var has_dash: bool = false
+var has_double_jump: bool = true
 
 var fade_rect: ColorRect
 var shake_strength: float = 0.0
@@ -35,7 +30,6 @@ var shake_strength: float = 0.0
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
-	# Capa negra por encima de todo para el fade entre salas.
 	var layer := CanvasLayer.new()
 	layer.layer = 100
 	add_child(layer)
@@ -74,7 +68,6 @@ func change_room(scene_path: String, door_id: String) -> void:
 
 	await _fade_to(1.0)
 	boss_ended.emit()
-	# Diferido: no se puede liberar la sala actual en medio del callback de fisicas.
 	get_tree().change_scene_to_file.call_deferred(scene_path)
 	await get_tree().scene_changed
 	await _fade_to(0.0)
@@ -83,7 +76,6 @@ func change_room(scene_path: String, door_id: String) -> void:
 	is_transitioning = false
 
 
-# Resta vida; devuelve true si el jugador murio.
 func damage_player(amount: int) -> bool:
 	health = maxi(0, health - amount)
 	health_changed.emit(health, MAX_HEALTH)
@@ -97,14 +89,30 @@ func heal_full() -> void:
 	health_changed.emit(health, MAX_HEALTH)
 
 
-# Al morir: se espera la animacion, se recarga la sala y se aparece en la ultima puerta.
-# Si fue en la pelea contra un jefe, se vuelve al checkpoint.
+func rest(scene_path: String, spot_id: String) -> void:
+	checkpoint_scene = scene_path
+	checkpoint_door_id = spot_id
+	last_door_id = spot_id
+	heal_full()
+	Sfx.play("rest")
+	notice.emit("Descansaste: si caés ante un jefe, volvés acá")
+
+
+func is_checkpoint(scene_path: String, spot_id: String) -> bool:
+	return checkpoint_scene == scene_path and checkpoint_door_id == spot_id
+
+
+func grant_dash() -> void:
+	has_dash = true
+	Sfx.play("unlock")
+	notice.emit("Conseguiste el dash: Shift")
+
+
 func player_died() -> void:
 	if is_transitioning:
 		return
 	is_transitioning = true
 	Player.input_locked = true
-	# Se toma antes de esperar: si el jefe muere durante la animacion, la muerte sigue siendo suya.
 	var died_to_boss: bool = in_boss_fight
 
 	await get_tree().create_timer(DEATH_DELAY).timeout
@@ -129,7 +137,6 @@ func shake(strength: float) -> void:
 	shake_strength = maxf(shake_strength, strength)
 
 
-# Congela el juego un instante para que los golpes se sientan.
 func hitstop(duration: float) -> void:
 	Engine.time_scale = 0.05
 	await get_tree().create_timer(duration, true, false, true).timeout

@@ -1,9 +1,6 @@
 class_name Enemy
 extends CharacterBody2D
 
-# Base de todos los enemigos: vida, daño por contacto, retroceso, destello al ser golpeado y muerte.
-# Cada enemigo concreto implementa _behave(delta) y deja velocity lista para mover.
-
 signal died
 
 const GRAVITY: float = 900.0
@@ -25,6 +22,7 @@ var flash_left: float = 0.0
 func _ready() -> void:
 	health = max_health
 	add_to_group("enemies")
+	_pass_through_player.call_deferred()
 
 
 func _physics_process(delta: float) -> void:
@@ -47,7 +45,6 @@ func _behave(_delta: float) -> void:
 	pass
 
 
-# Falso mientras el enemigo esta protegido (por ejemplo, un caracol escondido).
 func can_be_hit() -> bool:
 	return true
 
@@ -62,6 +59,8 @@ func take_hit(amount: int, from_position: Vector2) -> void:
 	sprite.modulate = Color(3.0, 3.0, 3.0)
 	flash_left = 0.08
 	knockback = signf(global_position.x - from_position.x) * knockback_strength
+	_burst(8, Color(1.0, 0.95, 0.8), 60.0, 140.0, 0.25, from_position.direction_to(global_position))
+	Sfx.play("hit")
 	_on_hit()
 	if health <= 0:
 		die()
@@ -74,6 +73,7 @@ func _on_hit() -> void:
 func _on_blocked_hit(_from_position: Vector2) -> void:
 	sprite.modulate = Color(0.6, 0.6, 0.8)
 	flash_left = 0.08
+	Sfx.play("block")
 
 
 func die() -> void:
@@ -83,7 +83,8 @@ func die() -> void:
 	collision_layer = 0
 	hurtbox.set_deferred("monitoring", false)
 	sprite.modulate = Color.WHITE
-	_spawn_puff()
+	_burst(18, Color(0.9, 0.85, 0.75, 0.8), 40.0, 110.0, 0.6, Vector2.ZERO)
+	Sfx.play("enemy_die")
 	died.emit()
 	if sprite.sprite_frames.has_animation("dead"):
 		sprite.play("dead")
@@ -107,25 +108,31 @@ func _apply_gravity(delta: float) -> void:
 		velocity.y = minf(velocity.y + GRAVITY * delta, MAX_FALL_SPEED)
 
 
+func _pass_through_player() -> void:
+	var player := _player()
+	if player:
+		add_collision_exception_with(player)
+
+
 func _player() -> Node2D:
 	return get_tree().get_first_node_in_group("player")
 
 
-# Nube de polvo al morir.
-func _spawn_puff() -> void:
-	var puff := CPUParticles2D.new()
-	puff.one_shot = true
-	puff.emitting = true
-	puff.amount = 18
-	puff.lifetime = 0.6
-	puff.explosiveness = 1.0
-	puff.spread = 180.0
-	puff.gravity = Vector2(0, 60)
-	puff.initial_velocity_min = 40.0
-	puff.initial_velocity_max = 110.0
-	puff.scale_amount_min = 2.0
-	puff.scale_amount_max = 4.0
-	puff.color = Color(0.9, 0.85, 0.75, 0.8)
-	puff.global_position = global_position
-	get_parent().add_child(puff)
-	get_tree().create_timer(1.0).timeout.connect(puff.queue_free)
+func _burst(amount: int, color: Color, speed_min: float, speed_max: float, lifetime: float, direction: Vector2) -> void:
+	var particles := CPUParticles2D.new()
+	particles.one_shot = true
+	particles.emitting = true
+	particles.amount = amount
+	particles.lifetime = lifetime
+	particles.explosiveness = 1.0
+	particles.direction = direction if direction != Vector2.ZERO else Vector2.UP
+	particles.spread = 180.0 if direction == Vector2.ZERO else 45.0
+	particles.gravity = Vector2(0, 60)
+	particles.initial_velocity_min = speed_min
+	particles.initial_velocity_max = speed_max
+	particles.scale_amount_min = 2.0
+	particles.scale_amount_max = 4.0
+	particles.color = color
+	particles.global_position = global_position
+	get_parent().add_child(particles)
+	get_tree().create_timer(lifetime + 0.4).timeout.connect(particles.queue_free)

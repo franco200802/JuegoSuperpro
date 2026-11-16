@@ -1,0 +1,63 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://Scripts/Enemies/shadow_knight.gd" id="1"]
+[ext_resource type="SpriteFrames" path="res://Scenes/player_frames.tres" id="2"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
+radius = 10.0
+height = 40.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hurt"]
+radius = 12.0
+height = 42.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_slash"]
+size = Vector2(46, 40)
+
+[sub_resource type="Gradient" id="Gradient_aura"]
+offsets = PackedFloat32Array(0, 1)
+colors = PackedColorArray(0.35, 0.15, 0.6, 0.7, 0.1, 0.05, 0.2, 0)
+
+[node name="ShadowKnight" type="CharacterBody2D"]
+collision_layer = 4
+script = ExtResource("1")
+max_health = 22
+knockback_strength = 60.0
+boss_name = "Caballero Sombra"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_body")
+
+[node name="Aura" type="CPUParticles2D" parent="."]
+amount = 20
+lifetime = 0.8
+emission_shape = 3
+emission_rect_extents = Vector2(10, 18)
+direction = Vector2(0, -1)
+spread = 20.0
+gravity = Vector2(0, -20)
+initial_velocity_min = 5.0
+initial_velocity_max = 15.0
+scale_amount_min = 2.0
+scale_amount_max = 4.0
+color_ramp = SubResource("Gradient_aura")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("2")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="Hurtbox" type="Area2D" parent="."]
+collision_layer = 0
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+shape = SubResource("CapsuleShape2D_hurt")
+
+[node name="Slash" type="Area2D" parent="."]
+position = Vector2(28, -2)
+collision_layer = 0
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Slash"]
+shape = SubResource("RectangleShape2D_slash")

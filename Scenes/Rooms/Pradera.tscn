@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://cj67bdwblm5lh" path="res://Assets/Sprites/Trees/Background.png" id="13"]
 [ext_resource type="PackedScene" path="res://Scenes/Enemies/Snail.tscn" id="18"]
 [ext_resource type="PackedScene" path="res://Scenes/Enemies/Bat.tscn" id="19"]
+[ext_resource type="PackedScene" path="res://Scenes/RestPoint.tscn" id="20"]
 
 [node name="Pradera" type="Node2D" unique_id=1985544365]
 script = ExtResource("1")
@@ -160,6 +161,10 @@ area_size = Vector2(64, 48)
 
 [node name="SpawnPoint" parent="Doors/HaciaAcantilado" index="1"]
 position = Vector2(-40, 92)
+
+[node name="Farol" parent="." instance=ExtResource("20")]
+position = Vector2(112, 336)
+spot_id = "pradera_farol"
 
 [node name="Player" parent="." unique_id=1516554234 instance=ExtResource("4")]
 position = Vector2(56, 316)

@@ -4,12 +4,27 @@
 | Acción | Tecla |
 |---|---|
 | Moverse | `A` / `D` o flechas ← → |
-| Saltar | `Espacio` |
+| Saltar | `Espacio` (mantener para saltar más alto) |
 | Doble salto | `Espacio` (en el aire) |
-| Dash | `Shift` |
+| Dash | `Shift` (se consigue al vencer al Caracol Gigante) |
 | Atacar | `X`, `K` o click izquierdo |
-| Interactuar | `E` |
+| Atacar hacia arriba | `W` / ↑ + ataque |
+| Atacar hacia abajo | `S` / ↓ + ataque en el aire (rebota en enemigos y pinchos) |
+| Interactuar / descansar | `E` |
 
 Shortcuts de testing: `H` activa/desactiva el doble salto y `J` el dash (el estado se imprime en la consola de Godot).
 
+## Mapa
 
+Cuanto más alto, más difícil.
+
+| Altura | Salas | Qué hay |
+|---|---|---|
+| Cima | Cima | Caballero Sombra (jefe final) y la meta |
+| Alta | Torre | Avispas, murciélagos rojos, saltos entre pinchos y un farol |
+| Media alta | Ruinas, Grieta | Jabalíes y emboscadas. La Grieta pide el dash |
+| Media | Acantilado, Bosque | Primeros pinchos y el Guardián de Musgo |
+| Inicio | Pradera | Caracoles, un murciélago y el primer farol |
+| Abajo | Pozo, Cavernas | Murciélagos y el Caracol Gigante, que da el dash |
+
+Los faroles curan y guardan el punto al que se vuelve si un jefe te vence. Las demás muertes reaparecen en la última puerta.

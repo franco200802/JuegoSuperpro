@@ -1,43 +1,30 @@
 extends Room
 
-# Grilla del mapa: "#" es bloque solido, "." es aire.
-# Se genera en runtime para mantener el nivel facil de editar como texto.
-# Los tiles se eligen solos segun los vecinos (bordes, esquinas, plataformas finas).
-
-# Filas del atlas de cada terreno; las columnas 0 y 4 son los bordes izquierdo y derecho.
 const TERRAINS := {
 	"grass": {"overlay": 0, "top": 1, "middle": [2, 3], "bottom": 4},
 	"stone": {"overlay": 5, "top": 6, "middle": [7, 8], "bottom": 9},
 }
-# Plataformas de un bloque de alto: [izquierda, centro, derecha].
 const PLATFORMS := {
 	"grass": [Vector2i(0, 1), Vector2i(2, 1), Vector2i(4, 1)],
 	"plank": [Vector2i(5, 6), Vector2i(6, 6), Vector2i(7, 6)],
 	"brick": [Vector2i(11, 15), Vector2i(12, 15), Vector2i(13, 15)],
 }
-# Tiles de relleno de la pared del fondo.
 const BACK_WALLS := {
 	"stone": [Vector2i(1, 7), Vector2i(2, 7), Vector2i(3, 7), Vector2i(1, 8), Vector2i(2, 8), Vector2i(3, 8)],
 	"brick": [Vector2i(10, 12), Vector2i(11, 12), Vector2i(12, 12), Vector2i(10, 13), Vector2i(11, 13), Vector2i(12, 13)],
 }
-# Oscurecido de la pared del fondo (la roca ya es oscura, el ladrillo se apaga mas).
 const BACK_WALL_COLORS := {"stone": Color(0.65, 0.65, 0.75), "brick": Color(0.55, 0.55, 0.65)}
-# Cuanto por debajo del mapa hay que caer para volver al punto de aparicion.
 const FALL_MARGIN: float = 244.0
 
-# Cada sala define su propia grilla en el inspector (todas las filas del mismo largo).
 @export var map: Array[String] = []
-# Margen de camara alrededor de la grilla (Main tiene cielo abierto arriba; las salas cerradas usan 0).
 @export var camera_margin_top: int = 120
 @export var camera_margin_bottom: int = 44
 @export_enum("grass", "stone") var terrain: String = "grass"
 @export_enum("grass", "plank", "brick") var platform_style: String = "grass"
-# Pared oscura detras del escenario (cuevas y ruinas); "none" deja ver el fondo.
 @export_enum("none", "stone", "brick") var back_wall: String = "none"
 
 @onready var ground: TileMapLayer = $Ground
 
-var spawn_position: Vector2
 var fall_limit: float
 
 
@@ -46,17 +33,13 @@ func _ready() -> void:
 	super()
 	fall_limit = map.size() * ground.tile_set.tile_size.y + FALL_MARGIN
 	if player:
-		# Despues de super(): si entro por una puerta, el respawn por caida es esa puerta.
-		spawn_position = player.global_position
+		player.safe_position = player.global_position
 		_fit_camera_to_map()
 
 
 func _process(_delta: float) -> void:
-	# Caer por un hueco cuesta un corazon y devuelve al punto de entrada.
-	if player and player.global_position.y > fall_limit and not GameManager.is_transitioning:
-		player.take_fall_damage(1)
-		player.global_position = spawn_position
-		player.velocity = Vector2.ZERO
+	if player and player.global_position.y > fall_limit:
+		player.hurt_by_hazard()
 
 
 func _build_map() -> void:
@@ -85,7 +68,6 @@ func _build_map() -> void:
 			elif open_down:
 				row = style.bottom
 			ground.set_cell(Vector2i(x, y), 0, Vector2i(col, row))
-			# Pasto o piedras que sobresalen por encima del borde superior (sin colision).
 			if open_up and y > 0:
 				ground.set_cell(Vector2i(x, y - 1), 0, Vector2i(col, style.overlay))
 
@@ -116,7 +98,6 @@ func _build_back_wall() -> void:
 				layer.set_cell(Vector2i(x, y), 0, tiles[(x * 5 + y * 3) % tiles.size()])
 
 
-# Fuera de la grilla cuenta como solido, asi los bordes del mapa no dibujan esquinas.
 func _is_solid(x: int, y: int) -> bool:
 	if y < 0 or y >= map.size() or x < 0 or x >= map[y].length():
 		return true

@@ -1,9 +1,5 @@
 extends Boss
 
-# Caracol Gigante: se arrastra hacia el jugador, se esconde en el caparazon y embiste
-# hasta chocar contra una pared. Solo se le puede pegar cuando esta afuera del caparazon.
-# Segunda fase: embiste mas rapido y al salir del caparazon llama a una cria.
-
 enum State { CRAWL, HIDE, CHARGE, STUNNED, UNHIDE }
 
 const SNAIL := preload("res://Scenes/Enemies/Snail.tscn")
@@ -46,6 +42,7 @@ func _behave(delta: float) -> void:
 			velocity.x = direction * charge_speed * (1.35 if is_phase_two() else 1.0)
 			if is_on_wall() or state_time <= 0.0:
 				GameManager.shake(6.0)
+				Sfx.play("thud")
 				velocity.x = 0.0
 				knockback = -direction * 120.0
 				_set_state(State.STUNNED, 0.9)

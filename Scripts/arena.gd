@@ -1,12 +1,8 @@
 extends Node2D
 
-# Pelea encerrada: al entrar al Trigger se cierran las rejas (hijos de "Gates")
-# y salen las oleadas en orden ("Wave1", "Wave2"...). Cuando no queda ningun
-# enemigo de la ultima oleada se abren las rejas y la pelea queda ganada para siempre.
-
 @export var arena_id: String = ""
-# Recupera toda la vida al ganar (para los jefes).
 @export var heal_on_clear: bool = false
+@export var grants_dash: bool = false
 
 @onready var trigger: Area2D = $Trigger
 @onready var gates: Node2D = $Gates
@@ -63,8 +59,6 @@ func _next_wave() -> void:
 		create_tween().tween_property(enemy, "modulate:a", 1.0, 0.4)
 		if enemy is Boss:
 			enemy.start(_fight_rect())
-	# Una oleada sin enemigos no emitiria ningun "died": se pasa a la siguiente.
-	# Termina porque cada llamada saca una oleada de la lista.
 	if alive == 0:
 		_next_wave()
 
@@ -77,16 +71,16 @@ func _on_enemy_died() -> void:
 
 func _finish() -> void:
 	GameManager.cleared_arenas[arena_id] = true
-	# Las crias que haya invocado un jefe mueren con el.
 	for node in get_tree().get_nodes_in_group("enemies"):
 		if is_ancestor_of(node) and not node.is_dead:
 			node.die()
-	# Rocas y ondas que el jefe dejo en el aire no lastiman despues de ganar.
 	for hazard in get_tree().get_nodes_in_group("hazards"):
 		if is_ancestor_of(hazard):
 			hazard.queue_free()
 	if heal_on_clear:
 		GameManager.heal_full()
+	if grants_dash and not GameManager.has_dash:
+		GameManager.grant_dash()
 	await get_tree().create_timer(0.6).timeout
 	_set_gates(false, true)
 
@@ -108,9 +102,9 @@ func _set_gates(closed: bool, animate: bool) -> void:
 			tween.tween_callback(sprite.hide)
 	if animate:
 		GameManager.shake(3.0)
+		Sfx.play("gate")
 
 
-# Zona de la pelea en coordenadas globales (la forma del Trigger).
 func _fight_rect() -> Rect2:
 	var shape_node: CollisionShape2D = trigger.get_node("CollisionShape2D")
 	var size: Vector2 = shape_node.shape.size

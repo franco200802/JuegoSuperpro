@@ -1,13 +1,9 @@
 class_name Boss
 extends Enemy
 
-# Base de los jefes: no se mueven hasta que la arena los activa,
-# avisan al HUD para la barra de vida y tienen una segunda fase con la mitad de vida.
-
 @export var boss_name: String = "Jefe"
 
 var active: bool = false
-# Zona de la pelea (en coordenadas globales), la pasa la arena.
 var arena_rect: Rect2
 var state_time: float = 0.0
 

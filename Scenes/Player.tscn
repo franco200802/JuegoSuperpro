@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://Scripts/player.gd" id="1"]
 [ext_resource type="SpriteFrames" path="res://Scenes/player_frames.tres" id="2"]
+[ext_resource type="Script" path="res://Scripts/slash_effect.gd" id="3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hitbox"]
 size = Vector2(44, 40)
@@ -23,11 +24,15 @@ animation = &"idle"
 [node name="Hitbox" type="Area2D" parent="."]
 position = Vector2(26, -2)
 collision_layer = 0
-collision_mask = 4
+collision_mask = 12
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
 shape = SubResource("RectangleShape2D_hitbox")
+
+[node name="Slash" type="Node2D" parent="."]
+position = Vector2(0, -2)
+script = ExtResource("3")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position_smoothing_enabled = true

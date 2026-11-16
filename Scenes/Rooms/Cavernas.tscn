@@ -173,6 +173,7 @@ position = Vector2(264, 336)
 script = ExtResource("15")
 arena_id = "cavernas_jefe"
 heal_on_clear = true
+grants_dash = true
 
 [node name="Trigger" type="Area2D" parent="Arena"]
 collision_layer = 0
@@ -232,8 +233,8 @@ position = Vector2(-48, 12)
 [node name="NpcMinero" parent="." instance=ExtResource("5")]
 position = Vector2(104, 337)
 npc_name = "Minero"
-npc_line = "Este pozo conecta con todo. Si subis lo suficiente vas a ver la cima."
-player_line = "Entonces voy a seguir subiendo."
+npc_line = "El caracol gigante de esta caverna guarda la fuerza para embestir en el aire. Sin ella no vas a cruzar la grieta."
+player_line = "Entonces voy a tener que vencerlo."
 
 [node name="Player" parent="." instance=ExtResource("4")]
 position = Vector2(200, 76)
