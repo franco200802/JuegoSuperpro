@@ -1,43 +1,44 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene format=3 uid="uid://cgm0ed0c66ogs"]
 
-[ext_resource type="Script" path="res://Scripts/player.gd" id="1"]
-[ext_resource type="SpriteFrames" path="res://Scenes/player_frames.tres" id="2"]
-[ext_resource type="Script" path="res://Scripts/slash_effect.gd" id="3"]
+[ext_resource type="Script" uid="uid://cthbg31f51hnd" path="res://Scripts/player.gd" id="1"]
+[ext_resource type="SpriteFrames" uid="uid://m5ng28apb4q8" path="res://Scenes/player_frames.tres" id="2"]
+[ext_resource type="Script" uid="uid://bld0xecb8otb5" path="res://Scripts/slash_effect.gd" id="3"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_player"]
+height = 40.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hitbox"]
 size = Vector2(44, 40)
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_player"]
-radius = 10.0
-height = 40.0
-
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" unique_id=133735316]
 script = ExtResource("1")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1195826524]
 shape = SubResource("CapsuleShape2D_player")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=10672972]
 sprite_frames = ExtResource("2")
-animation = &"idle"
+animation = &"dead"
+frame = 7
+frame_progress = 1.0
 
-[node name="Hitbox" type="Area2D" parent="."]
+[node name="Hitbox" type="Area2D" parent="." unique_id=2143901197]
 position = Vector2(26, -2)
 collision_layer = 0
 collision_mask = 12
 monitorable = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=1476369284]
 shape = SubResource("RectangleShape2D_hitbox")
 
-[node name="Slash" type="Node2D" parent="."]
+[node name="Slash" type="Node2D" parent="." unique_id=654070808]
 position = Vector2(0, -2)
 script = ExtResource("3")
 
-[node name="Camera2D" type="Camera2D" parent="."]
-position_smoothing_enabled = true
-position_smoothing_speed = 6.0
+[node name="Camera2D" type="Camera2D" parent="." unique_id=111189499]
 limit_left = 0
 limit_top = -120
 limit_right = 2080
 limit_bottom = 300
+position_smoothing_enabled = true
+position_smoothing_speed = 6.0
