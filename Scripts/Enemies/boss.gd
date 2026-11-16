@@ -27,7 +27,7 @@ func is_phase_two() -> bool:
 
 
 func _on_hit() -> void:
-	GameManager.boss_health_changed.emit(maxi(health, 0))
+	GameManager.boss_health_changed.emit(maxf(health, 0.0))
 
 
 func die() -> void:

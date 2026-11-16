@@ -2,7 +2,7 @@ extends Node
 
 signal health_changed(health: int, max_health: int)
 signal boss_started(boss_name: String, max_health: int)
-signal boss_health_changed(health: int)
+signal boss_health_changed(health: float)
 signal boss_ended
 signal notice(text: String)
 

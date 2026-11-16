@@ -200,7 +200,7 @@ size = Vector2(108, 50)
 [node name="GiantSnail" type="CharacterBody2D"]
 collision_layer = 4
 script = ExtResource("1")
-max_health = 14
+max_health = 10
 knockback_strength = 0.0
 boss_name = "Caracol Gigante"
 

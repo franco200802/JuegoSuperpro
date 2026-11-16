@@ -43,7 +43,7 @@ func _on_boss_started(display_name: String, max_health: int) -> void:
 	boss_panel.visible = true
 
 
-func _on_boss_health_changed(health: int) -> void:
+func _on_boss_health_changed(health: float) -> void:
 	var tween := create_tween()
 	tween.tween_property(boss_bar, "value", health, 0.2)
 

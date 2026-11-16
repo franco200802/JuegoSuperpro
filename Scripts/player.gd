@@ -19,7 +19,7 @@ const DASH_SPEED: float = 380.0
 const DASH_TIME: float = 0.15
 const DASH_COOLDOWN: float = 0.5
 
-const ATTACK_DAMAGE: int = 1
+const ATTACK_DAMAGE: float = 1.25
 const ATTACK_COOLDOWN: float = 0.3
 const ATTACK_RECOIL: float = 110.0
 const HITBOX_OFFSET: float = 26.0
@@ -30,6 +30,11 @@ const INVULNERABLE_TIME: float = 1.0
 const HURT_TIME: float = 0.25
 const KNOCKBACK := Vector2(200.0, -180.0)
 const SAFE_GROUND_FRAMES: int = 10
+
+# Para las demos: tocar 5, 6 y 7 seguidos prende o apaga el modo dios
+# (no lo lastiman y pega mucho mas fuerte).
+const CHEAT_KEYS: Array[int] = [KEY_5, KEY_6, KEY_7]
+const GOD_MODE_DAMAGE: float = 5.0
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var hitbox: Area2D = $Hitbox
@@ -56,6 +61,9 @@ var hurt_left: float = 0.0
 var is_dead: bool = false
 var last_damage_frame: int = -2
 
+var god_mode: bool = false
+var cheat_step: int = 0
+
 var safe_position: Vector2
 var ground_trail: Array[Vector2] = []
 
@@ -67,12 +75,32 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		_check_cheat(event.physical_keycode)
+
 	if event.is_action_pressed("toggle_double_jump"):
 		GameManager.has_double_jump = not GameManager.has_double_jump
 		print("Doble salto activado" if GameManager.has_double_jump else "Doble salto desactivado")
 	elif event.is_action_pressed("toggle_dash"):
 		GameManager.has_dash = not GameManager.has_dash
 		print("Dash activado" if GameManager.has_dash else "Dash desactivado")
+
+
+func _check_cheat(key: int) -> void:
+	if key == CHEAT_KEYS[cheat_step]:
+		cheat_step += 1
+	else:
+		# Si se equivoca pero toca el 5, arranca la secuencia de nuevo.
+		cheat_step = 1 if key == CHEAT_KEYS[0] else 0
+
+	if cheat_step < CHEAT_KEYS.size():
+		return
+
+	cheat_step = 0
+	god_mode = not god_mode
+	var text: String = "Modo dios activado" if god_mode else "Modo dios desactivado"
+	print(text)
+	GameManager.notice.emit(text)
 
 
 func _process(delta: float) -> void:
@@ -209,11 +237,12 @@ func _attack() -> void:
 	slash.play(direction)
 	Sfx.play("attack")
 
+	var damage: float = GOD_MODE_DAMAGE if god_mode else ATTACK_DAMAGE
 	var hit_enemy: bool = false
 	var hit_spikes: bool = false
 	for collider in _colliders_in_hitbox():
 		if collider.has_method("take_hit"):
-			collider.take_hit(ATTACK_DAMAGE, global_position)
+			collider.take_hit(damage, global_position)
 			hit_enemy = true
 		elif collider.is_in_group("spikes"):
 			hit_spikes = true
@@ -275,7 +304,7 @@ func hurt_by_hazard() -> void:
 
 
 func _apply_damage(amount: int, from_position: Vector2) -> void:
-	if is_dead or GameManager.is_transitioning:
+	if is_dead or GameManager.is_transitioning or god_mode:
 		return
 	last_damage_frame = Engine.get_physics_frames()
 	is_dashing = false

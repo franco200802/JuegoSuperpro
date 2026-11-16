@@ -13,7 +13,7 @@ const MAX_FALL_SPEED: float = 420.0
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var hurtbox: Area2D = $Hurtbox
 
-var health: int
+var health: float
 var is_dead: bool = false
 var knockback: float = 0.0
 var flash_left: float = 0.0
@@ -49,7 +49,7 @@ func can_be_hit() -> bool:
 	return true
 
 
-func take_hit(amount: int, from_position: Vector2) -> void:
+func take_hit(amount: float, from_position: Vector2) -> void:
 	if is_dead:
 		return
 	if not can_be_hit():
