@@ -12,7 +12,7 @@
 | Atacar hacia abajo | `S` / ↓ + ataque en el aire (rebota en enemigos y pinchos) |
 | Interactuar / descansar | `E` |
 
-Shortcuts de testing: `H` activa/desactiva el doble salto y `J` el dash (el estado se imprime en la consola de Godot).
+Shortcuts de testing: J` el dash (el estado se imprime en la consola de Godot) , "5","6","7" (God Mode).
 
 ## Mapa
 
