@@ -9,7 +9,7 @@ const FRICTION: float = 900.0
 
 const GRAVITY: float = 900.0
 const MAX_FALL_SPEED: float = 420.0
-const JUMP_VELOCITY: float = -300.0
+const JUMP_VELOCITY: float = -335.0
 const DOUBLE_JUMP_VELOCITY: float = -260.0
 const JUMP_CUT: float = 0.45
 const COYOTE_TIME: float = 0.1
