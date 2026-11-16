@@ -16,6 +16,7 @@ var facing: float = -1.0
 var combo_left: int = 0
 var dashes_left: int = 0
 var slash_active: bool = false
+var last_warning_ms: int = -10000
 
 
 func _ready() -> void:
@@ -94,6 +95,14 @@ func _behave(delta: float) -> void:
 	slash.position.x = SLASH_OFFSET * facing
 	if slash_active:
 		_slash_damage()
+
+
+func _on_blocked_hit(from_position: Vector2) -> void:
+	super(from_position)
+	if Time.get_ticks_msec() - last_warning_ms < 4000:
+		return
+	last_warning_ms = Time.get_ticks_msec()
+	GameManager.notice.emit("Tus golpes no la atraviesan: la Sombra solo teme a la Hoja de Musgo")
 
 
 func _start_slash() -> void:

@@ -20,6 +20,8 @@ const DASH_TIME: float = 0.15
 const DASH_COOLDOWN: float = 0.5
 
 const ATTACK_DAMAGE: float = 1.25
+const BLADE_DAMAGE: float = 2.0
+const BLADE_REACH: float = 1.35
 const ATTACK_COOLDOWN: float = 0.3
 const ATTACK_RECOIL: float = 110.0
 const HITBOX_OFFSET: float = 26.0
@@ -98,6 +100,8 @@ func _check_cheat(key: int) -> void:
 
 	cheat_step = 0
 	god_mode = not god_mode
+	if god_mode:
+		GameManager.has_moss_blade = true
 	var text: String = "Modo dios activado" if god_mode else "Modo dios desactivado"
 	print(text)
 	GameManager.notice.emit(text)
@@ -233,11 +237,15 @@ func _attack() -> void:
 		direction = Vector2.UP
 	elif Input.is_action_pressed("move_down") and not is_on_floor():
 		direction = Vector2.DOWN
+	var blade: bool = GameManager.has_moss_blade
+	var reach: float = BLADE_REACH if blade else 1.0
+	hitbox.scale = Vector2.ONE * reach
 	hitbox.position = Vector2(HITBOX_OFFSET * facing, -2.0) if direction.y == 0.0 else direction * HITBOX_REACH
-	slash.play(direction)
+	hitbox.position *= reach
+	slash.play(direction, blade)
 	Sfx.play("attack")
 
-	var damage: float = GOD_MODE_DAMAGE if god_mode else ATTACK_DAMAGE
+	var damage: float = GOD_MODE_DAMAGE if god_mode else (BLADE_DAMAGE if blade else ATTACK_DAMAGE)
 	var hit_enemy: bool = false
 	var hit_spikes: bool = false
 	for collider in _colliders_in_hitbox():

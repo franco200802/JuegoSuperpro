@@ -20,10 +20,10 @@ Cuanto más alto, más difícil.
 
 | Altura | Salas | Qué hay |
 |---|---|---|
-| Cima | Cima | Caballero Sombra (jefe final) y la meta |
+| Cima | Cima | Caballero Sombra (jefe final, solo la Hoja de Musgo lo hiere) y la meta |
 | Alta | Torre | Avispas, murciélagos rojos, saltos entre pinchos y un farol |
 | Media alta | Ruinas, Grieta | Jabalíes y emboscadas. La Grieta pide el dash |
-| Media | Acantilado, Bosque | Primeros pinchos y el Guardián de Musgo |
+| Media | Acantilado, Bosque | Primeros pinchos y el Guardián de Musgo, que da la Hoja de Musgo |
 | Inicio | Pradera | Caracoles, un murciélago y el primer farol |
 | Abajo | Pozo, Cavernas | Murciélagos y el Caracol Gigante, que da el dash |
 

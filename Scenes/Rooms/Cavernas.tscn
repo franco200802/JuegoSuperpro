@@ -20,7 +20,7 @@ offsets = PackedFloat32Array(0, 0.5, 1)
 colors = PackedColorArray(1.8, 1.7, 0.8, 0, 1.8, 1.7, 0.8, 1, 1.8, 1.7, 0.8, 0)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_trigger"]
-size = Vector2(816, 320)
+size = Vector2(716, 320)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gate1"]
 size = Vector2(16, 320)
@@ -180,7 +180,7 @@ collision_layer = 0
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Arena/Trigger"]
-position = Vector2(792, 192)
+position = Vector2(742, 192)
 shape = SubResource("RectangleShape2D_trigger")
 
 [node name="Gates" type="Node2D" parent="Arena"]
@@ -231,7 +231,7 @@ area_size = Vector2(16, 64)
 position = Vector2(-48, 12)
 
 [node name="NpcMinero" parent="." instance=ExtResource("5")]
-position = Vector2(104, 337)
+position = Vector2(1150, 337)
 npc_name = "Minero"
 npc_line = "El caracol gigante de esta caverna guarda la fuerza para embestir en el aire. Sin ella no vas a cruzar la grieta."
 player_line = "Entonces voy a tener que vencerlo."

@@ -141,6 +141,7 @@ position = Vector2(392, 136)
 script = ExtResource("15")
 arena_id = "cima_jefe"
 heal_on_clear = true
+requires_blade = true
 
 [node name="Trigger" type="Area2D" parent="Arena"]
 collision_layer = 0
@@ -188,10 +189,10 @@ position = Vector2(856, 88)
 required_arena = "cima_jefe"
 
 [node name="NpcAnciano" parent="." instance=ExtResource("5")]
-position = Vector2(584, 97)
+position = Vector2(504, 145)
 npc_name = "Anciano"
-npc_line = "Una sombra custodia la cima. Si la vences, el camino es tuyo."
-player_line = "Para eso vine."
+npc_line = "Una sombra custodia la cima y ningun filo comun la toca. Solo la Hoja de Musgo, que guarda el Guardian del Bosque, puede herirla."
+player_line = "Entonces primero tengo que vencer al Guardian."
 
 [node name="Player" parent="." instance=ExtResource("4")]
 position = Vector2(120, 332)

@@ -3,6 +3,8 @@ extends Node2D
 @export var arena_id: String = ""
 @export var heal_on_clear: bool = false
 @export var grants_dash: bool = false
+@export var grants_blade: bool = false
+@export var requires_blade: bool = false
 
 @onready var trigger: Area2D = $Trigger
 @onready var gates: Node2D = $Gates
@@ -34,6 +36,9 @@ func _ready() -> void:
 
 func _on_trigger_body_entered(body: Node) -> void:
 	if started or not body.is_in_group("player"):
+		return
+	if requires_blade and not GameManager.has_moss_blade:
+		GameManager.notice.emit("Una fuerza oscura te repele: necesitás la Hoja de Musgo del Guardián del Bosque")
 		return
 	started = true
 	trigger.set_deferred("monitoring", false)
@@ -81,6 +86,8 @@ func _finish() -> void:
 		GameManager.heal_full()
 	if grants_dash and not GameManager.has_dash:
 		GameManager.grant_dash()
+	if grants_blade and not GameManager.has_moss_blade:
+		GameManager.grant_moss_blade()
 	await get_tree().create_timer(0.6).timeout
 	_set_gates(false, true)
 

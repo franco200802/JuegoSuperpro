@@ -246,7 +246,7 @@ area_size = Vector2(64, 48)
 position = Vector2(-56, 92)
 
 [node name="NpcGuardian" parent="." instance=ExtResource("5")]
-position = Vector2(648, 177)
+position = Vector2(256, 129)
 npc_name = "Guardian"
 npc_line = "Los jabalies de las ruinas embisten sin mirar. Si chocan contra un pilar, quedan aturdidos."
 player_line = "Entonces voy a pelear cerca de los pilares."

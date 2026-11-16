@@ -21,6 +21,7 @@ var in_boss_fight: bool = false
 var health: int = MAX_HEALTH
 var cleared_arenas: Dictionary = {}
 var has_dash: bool = false
+var has_moss_blade: bool = false
 var has_double_jump: bool = true
 
 var fade_rect: ColorRect
@@ -106,6 +107,12 @@ func grant_dash() -> void:
 	has_dash = true
 	Sfx.play("unlock")
 	notice.emit("Conseguiste el dash: Shift")
+
+
+func grant_moss_blade() -> void:
+	has_moss_blade = true
+	Sfx.play("unlock")
+	notice.emit("Conseguiste la Hoja de Musgo: pega más fuerte y hiere a la Sombra")
 
 
 func player_died() -> void:

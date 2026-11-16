@@ -23,6 +23,7 @@ collision_layer = 4
 script = ExtResource("1")
 max_health = 22
 knockback_strength = 60.0
+blade_only = true
 boss_name = "Caballero Sombra"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

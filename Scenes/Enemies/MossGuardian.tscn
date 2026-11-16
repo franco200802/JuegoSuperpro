@@ -27,7 +27,7 @@ size = Vector2(62, 100)
 [node name="MossGuardian" type="CharacterBody2D"]
 collision_layer = 4
 script = ExtResource("1")
-max_health = 18
+max_health = 28
 knockback_strength = 0.0
 boss_name = "Guardian de Musgo"
 

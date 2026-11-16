@@ -9,6 +9,7 @@ const MAX_FALL_SPEED: float = 420.0
 @export var max_health: int = 3
 @export var contact_damage: int = 1
 @export var knockback_strength: float = 160.0
+@export var blade_only: bool = false
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var hurtbox: Area2D = $Hurtbox
@@ -52,7 +53,7 @@ func can_be_hit() -> bool:
 func take_hit(amount: float, from_position: Vector2) -> void:
 	if is_dead:
 		return
-	if not can_be_hit():
+	if not can_be_hit() or (blade_only and not GameManager.has_moss_blade):
 		_on_blocked_hit(from_position)
 		return
 	health -= amount
