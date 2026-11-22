@@ -11,6 +11,7 @@ const NOTICE_TIME: float = 2.5
 @onready var notice: Label = $Notice
 
 var notice_tween: Tween
+var shown_health: int = 0
 
 
 func _ready() -> void:
@@ -33,7 +34,14 @@ func _on_health_changed(health: int, max_health: int) -> void:
 		heart.texture = HEART_FULL if i < health else HEART_EMPTY
 		heart.custom_minimum_size = Vector2(26, 22)
 		heart.stretch_mode = TextureRect.STRETCH_SCALE
+		heart.pivot_offset = heart.custom_minimum_size / 2.0
 		hearts.add_child(heart)
+	# Si gano vida, el ultimo corazon recuperado hace un pequeño salto.
+	if health > shown_health and shown_health > 0:
+		var heart: TextureRect = hearts.get_child(health - 1)
+		heart.scale = Vector2(1.6, 1.6)
+		create_tween().tween_property(heart, "scale", Vector2.ONE, 0.25)
+	shown_health = health
 
 
 func _on_boss_started(display_name: String, max_health: int) -> void:

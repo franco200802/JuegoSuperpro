@@ -64,6 +64,7 @@ func take_hit(amount: float, from_position: Vector2) -> void:
 	Sfx.play("hit")
 	_on_hit()
 	if health <= 0:
+		GameManager.enemy_killed()
 		die()
 
 

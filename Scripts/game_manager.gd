@@ -9,6 +9,7 @@ signal notice(text: String)
 const FADE_TIME: float = 0.25
 const MAX_HEALTH: int = 5
 const DEATH_DELAY: float = 1.2
+const KILLS_PER_HEART: int = 3
 
 var target_door_id: String = ""
 var last_door_id: String = ""
@@ -24,8 +25,15 @@ var has_dash: bool = false
 var has_moss_blade: bool = false
 var has_double_jump: bool = true
 
+var kills: int = 0
+var kills_for_heart: int = 0
+var deaths: int = 0
+var play_time: float = 0.0
+
 var fade_rect: ColorRect
 var shake_strength: float = 0.0
+var death_menu: CanvasLayer
+var end_menu: CanvasLayer
 
 
 func _ready() -> void:
@@ -43,6 +51,10 @@ func _ready() -> void:
 	layer.add_child(fade_rect)
 
 	add_child(preload("res://Scenes/HUD.tscn").instantiate())
+	death_menu = preload("res://Scenes/DeathMenu.tscn").instantiate()
+	add_child(death_menu)
+	end_menu = preload("res://Scenes/EndMenu.tscn").instantiate()
+	add_child(end_menu)
 
 	checkpoint_scene = ProjectSettings.get_setting("application/run/main_scene")
 	boss_started.connect(func(_boss_name: String, _max_health: int) -> void: in_boss_fight = true)
@@ -50,6 +62,8 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	if not get_tree().paused:
+		play_time += delta
 	var camera: Camera2D = get_viewport().get_camera_2d()
 	if camera == null:
 		return
@@ -83,6 +97,22 @@ func damage_player(amount: int) -> bool:
 	shake(4.0)
 	hitstop(0.08)
 	return health == 0
+
+
+func heal(amount: int) -> void:
+	if health >= MAX_HEALTH:
+		return
+	health = mini(health + amount, MAX_HEALTH)
+	health_changed.emit(health, MAX_HEALTH)
+	Sfx.play("heal")
+
+
+func enemy_killed() -> void:
+	kills += 1
+	kills_for_heart += 1
+	if kills_for_heart >= KILLS_PER_HEART:
+		kills_for_heart = 0
+		heal(1)
 
 
 func heal_full() -> void:
@@ -121,8 +151,11 @@ func player_died() -> void:
 	is_transitioning = true
 	Player.input_locked = true
 	var died_to_boss: bool = in_boss_fight
+	deaths += 1
 
 	await get_tree().create_timer(DEATH_DELAY).timeout
+	death_menu.open(died_to_boss)
+	await death_menu.retry_pressed
 	await _fade_to(1.0)
 	boss_ended.emit()
 	heal_full()
@@ -133,6 +166,40 @@ func player_died() -> void:
 		target_door_id = checkpoint_door_id
 		last_door_id = checkpoint_door_id
 	get_tree().change_scene_to_file.call_deferred(scene_path)
+	await get_tree().scene_changed
+	await _fade_to(0.0)
+
+	Player.input_locked = false
+	is_transitioning = false
+
+
+func finish_game() -> void:
+	Player.input_locked = true
+	end_menu.open()
+
+
+func restart_game() -> void:
+	if is_transitioning:
+		return
+	is_transitioning = true
+	await _fade_to(1.0)
+	get_tree().paused = false
+	boss_ended.emit()
+	health = MAX_HEALTH
+	cleared_arenas.clear()
+	has_dash = false
+	has_moss_blade = false
+	has_double_jump = true
+	kills = 0
+	kills_for_heart = 0
+	deaths = 0
+	play_time = 0.0
+	checkpoint_scene = ProjectSettings.get_setting("application/run/main_scene")
+	checkpoint_door_id = ""
+	last_door_id = ""
+	target_door_id = ""
+	health_changed.emit(health, MAX_HEALTH)
+	get_tree().change_scene_to_file.call_deferred(checkpoint_scene)
 	await get_tree().scene_changed
 	await _fade_to(0.0)
 

@@ -28,3 +28,9 @@ Cuanto más alto, más difícil.
 | Abajo | Pozo, Cavernas | Murciélagos y el Caracol Gigante, que da el dash |
 
 Los faroles curan y guardan el punto al que se vuelve si un jefe te vence. Las demás muertes reaparecen en la última puerta.
+
+Al morir aparece un menú para reintentar o salir. Al llegar a la meta se muestra el menú final con el tiempo, las muertes y los enemigos vencidos, y se puede volver a jugar desde el principio.
+
+## Combate
+
+Cada 3 enemigos vencidos recuperás un corazón.
