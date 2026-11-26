@@ -226,9 +226,7 @@ door_id = "cavernas_b"
 target_scene = "res://Scenes/Rooms/Pozo.tscn"
 target_door_id = "pozo_a"
 area_size = Vector2(16, 64)
-
-[node name="SpawnPoint" parent="Doors/HaciaPozo" index="1"]
-position = Vector2(-48, 12)
+spawn_offset = Vector2(-48, 12)
 
 [node name="NpcMinero" parent="." instance=ExtResource("5")]
 position = Vector2(1150, 337)

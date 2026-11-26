@@ -147,10 +147,7 @@ door_id = "pradera_b"
 target_scene = "res://Scenes/Rooms/Pozo.tscn"
 target_door_id = "pozo_b"
 area_size = Vector2(16, 64)
-
-[node name="SpawnPoint" parent="Doors/HaciaPozo" index="1"]
-position = Vector2(-48, 12)
-
+spawn_offset = Vector2(-48, 12)
 
 [node name="HaciaAcantilado" parent="Doors" unique_id=1352557578 instance=ExtResource("7")]
 position = Vector2(736, -16)
@@ -158,9 +155,7 @@ door_id = "pradera_c"
 target_scene = "res://Scenes/Rooms/Acantilado.tscn"
 target_door_id = "acantilado_a"
 area_size = Vector2(64, 48)
-
-[node name="SpawnPoint" parent="Doors/HaciaAcantilado" index="1"]
-position = Vector2(-40, 92)
+spawn_offset = Vector2(-40, 92)
 
 [node name="Farol" parent="." instance=ExtResource("20")]
 position = Vector2(112, 336)

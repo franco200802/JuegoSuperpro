@@ -231,9 +231,7 @@ door_id = "ruinas_a"
 target_scene = "res://Scenes/Rooms/Bosque.tscn"
 target_door_id = "bosque_b"
 area_size = Vector2(16, 64)
-
-[node name="SpawnPoint" parent="Doors/HaciaBosque" index="1"]
-position = Vector2(-64, 12)
+spawn_offset = Vector2(-64, 12)
 
 [node name="HaciaTorre" parent="Doors" instance=ExtResource("7")]
 position = Vector2(144, -16)
@@ -241,9 +239,7 @@ door_id = "ruinas_b"
 target_scene = "res://Scenes/Rooms/Torre.tscn"
 target_door_id = "torre_a"
 area_size = Vector2(64, 48)
-
-[node name="SpawnPoint" parent="Doors/HaciaTorre" index="1"]
-position = Vector2(-56, 92)
+spawn_offset = Vector2(-56, 92)
 
 [node name="NpcGuardian" parent="." instance=ExtResource("5")]
 position = Vector2(256, 129)

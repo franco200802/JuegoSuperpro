@@ -180,9 +180,7 @@ door_id = "cima_a"
 target_scene = "res://Scenes/Rooms/Torre.tscn"
 target_door_id = "torre_c"
 area_size = Vector2(48, 48)
-
-[node name="SpawnPoint" parent="Doors/HaciaTorre" index="1"]
-position = Vector2(-64, -92)
+spawn_offset = Vector2(-64, -92)
 
 [node name="Goal" parent="." instance=ExtResource("8")]
 position = Vector2(856, 88)

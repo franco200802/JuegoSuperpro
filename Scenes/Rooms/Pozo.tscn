@@ -147,9 +147,7 @@ door_id = "pozo_a"
 target_scene = "res://Scenes/Rooms/Cavernas.tscn"
 target_door_id = "cavernas_b"
 area_size = Vector2(16, 64)
-
-[node name="SpawnPoint" parent="Doors/HaciaCavernas" index="1"]
-position = Vector2(48, 12)
+spawn_offset = Vector2(48, 12)
 
 [node name="HaciaPradera" parent="Doors" instance=ExtResource("7")]
 position = Vector2(8, 352)
@@ -157,9 +155,7 @@ door_id = "pozo_b"
 target_scene = "res://Scenes/Rooms/Pradera.tscn"
 target_door_id = "pradera_b"
 area_size = Vector2(16, 64)
-
-[node name="SpawnPoint" parent="Doors/HaciaPradera" index="1"]
-position = Vector2(48, 12)
+spawn_offset = Vector2(48, 12)
 
 [node name="Player" parent="." instance=ExtResource("4")]
 position = Vector2(56, 748)

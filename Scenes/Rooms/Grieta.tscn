@@ -209,9 +209,7 @@ door_id = "grieta_a"
 target_scene = "res://Scenes/Rooms/Acantilado.tscn"
 target_door_id = "acantilado_c"
 area_size = Vector2(48, 48)
-
-[node name="SpawnPoint" parent="Doors/HaciaAcantilado" index="1"]
-position = Vector2(-64, -92)
+spawn_offset = Vector2(-64, -92)
 
 [node name="HaciaTorre" parent="Doors" instance=ExtResource("7")]
 position = Vector2(8, 128)
@@ -219,9 +217,7 @@ door_id = "grieta_b"
 target_scene = "res://Scenes/Rooms/Torre.tscn"
 target_door_id = "torre_b"
 area_size = Vector2(16, 64)
-
-[node name="SpawnPoint" parent="Doors/HaciaTorre" index="1"]
-position = Vector2(48, 12)
+spawn_offset = Vector2(48, 12)
 
 [node name="Player" parent="." instance=ExtResource("4")]
 position = Vector2(344, 428)

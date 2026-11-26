@@ -5,8 +5,7 @@ extends Area2D
 @export_file("*.tscn") var target_scene: String = ""
 @export var target_door_id: String = ""
 @export var area_size: Vector2 = Vector2(16, 64)
-
-@onready var spawn_point: Marker2D = $SpawnPoint
+@export var spawn_offset: Vector2 = Vector2(-40, 12)
 
 
 func _ready() -> void:
@@ -27,4 +26,4 @@ func _on_body_entered(body: Node) -> void:
 
 
 func get_spawn_position() -> Vector2:
-	return spawn_point.global_position
+	return global_position + spawn_offset
